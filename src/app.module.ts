@@ -1,7 +1,11 @@
 import { Module } from '@nestjs/common';
 import { MovieManagementModule } from './movie-management/movie-management.module';
+import { ConfigModule } from '@nestjs/config';
+import { UserModule } from './user/user.module';
 
 @Module({
-  imports: [MovieManagementModule],
+  imports: [MovieManagementModule, ConfigModule.forRoot({
+    isGlobal: true
+  }), UserModule],
 })
 export class AppModule { }
