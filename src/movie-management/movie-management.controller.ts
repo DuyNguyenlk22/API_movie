@@ -1,18 +1,18 @@
-import { Controller, Get, Post, Param, Delete, Query, ValidationPipe, UseInterceptors, UploadedFile, Body, Req, BadRequestException } from '@nestjs/common';
+import { Controller, Get, Post, Param, Delete, Query, ValidationPipe, UseInterceptors, UploadedFile, Body, Req, BadRequestException, UseGuards, ParseFilePipe, MaxFileSizeValidator, FileTypeValidator, ParseFilePipeBuilder, HttpStatus, Put } from '@nestjs/common';
 import { MovieManagementService } from './movie-management.service';
-import { ApiBody, ApiConsumes, ApiTags, ApiProperty } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { GetListMoviePaginate } from './dto/getListMoviePaginate.dto';
 import { GetListMovieByDate } from './dto/getListMovieByDate.dto';
 import { UploadDTO } from './dto/upload.dto';
-import { FileInterceptor } from '@nestjs/platform-express';
-import { diskStorage } from 'multer';
-import { DataMovieDto } from './dto/dataMovie.dto';
-import { validate } from 'class-validator';
 import { addImg } from 'src/config/upload';
+import { JwtGuard } from 'src/guard/jwt.guard';
+import { UpdateMovieDto } from './dto/movieUpdate.dto';
 
 
 
 @ApiTags("QuanLyPhim")
+// @UseGuards(JwtGuard)
+// @ApiBearerAuth()
 @Controller('api/QuanLyPhim')
 export class MovieManagementController {
 
@@ -34,16 +34,14 @@ export class MovieManagementController {
   }
 
   @Get("LayDanhSachPhimTheoNgay")
-  getListMovieByDay(@Query() query1: GetListMovieByDate) {
-    return this.movieService.getListMovieByDay(query1)
+  getListMovieByDate(@Query() query1: GetListMovieByDate) {
+    return this.movieService.getListMovieByDate(query1)
   }
 
-  @Get("LayThongTinPhim/:maPhim")
-  getMovieById(@Param("maPhim") param: string) {
-    return this.movieService.getMovieById(param)
+  @Get("LayThongTinPhim")
+  getMovieById(@Query("maPhim") maPhim: string) {
+    return this.movieService.getMovieById(maPhim)
   }
-
-
 
   @ApiConsumes("multipart/form-data")
   @ApiBody({
@@ -52,10 +50,40 @@ export class MovieManagementController {
 
   @Post("ThemPhimUploadHinh")
   @UseInterceptors(addImg())
-  addMovie(@Body() formData: UploadDTO, @UploadedFile() hinhAnh: Express.Multer.File[]) {
+  addMovie(@Body() formData: UploadDTO, @UploadedFile(
+    new ParseFilePipeBuilder()
+      .addMaxSizeValidator({
+        maxSize: 500000
+      }).build({
+        errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY
+      }),
+  ) hinhAnh: Express.Multer.File[]) {
     return this.movieService.addMovie(formData, hinhAnh)
   }
 
+  @Delete("XoaPhim")
+  deleteMovie(@Query("maPhim") maPhim: string) {
+    return this.movieService.deleteMovie(maPhim)
+  }
+
+  @ApiConsumes("multipart/form-data")
+  @ApiBody({
+    type: UpdateMovieDto
+  })
+  @Put("CapNhatPhimUpload")
+  @UseInterceptors(addImg())
+  updateMovie(@Body() body: UpdateMovieDto,
+    @UploadedFile(
+      new ParseFilePipeBuilder()
+        .addMaxSizeValidator({
+          maxSize: 500000
+        }).build({
+          errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY
+        }),
+    ) hinhAnh: Express.Multer.File[]
+  ) {
+    return this.movieService.updateMovie(body, hinhAnh)
+  }
 
 
 }

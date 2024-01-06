@@ -10,7 +10,7 @@ async function bootstrap() {
   app.use(express.static("."))
   app.useGlobalPipes(new ValidationPipe())
 
-  const config = new DocumentBuilder().setTitle("API_Movie").build();
+  const config = new DocumentBuilder().setTitle("API_Movie").addBearerAuth().setDescription('').setVersion('v1').build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup("/swagger", app, document);
 

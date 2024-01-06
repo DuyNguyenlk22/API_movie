@@ -1,11 +1,13 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { MovieManagementModule } from './movie-management/movie-management.module';
 import { ConfigModule } from '@nestjs/config';
 import { UserModule } from './user/user.module';
+import { JwtStrategy } from './strategy';
 
 @Module({
-  imports: [MovieManagementModule, ConfigModule.forRoot({
+  imports: [UserModule, ConfigModule.forRoot({
     isGlobal: true
-  }), UserModule],
+  }), MovieManagementModule],
+  providers: [JwtStrategy]
 })
 export class AppModule { }

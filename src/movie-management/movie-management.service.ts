@@ -1,13 +1,15 @@
-import { BadRequestException, ForbiddenException, Injectable } from '@nestjs/common';
+import { ForbiddenException, HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
 import { responseData } from 'src/config/response';
 import { GetListMoviePaginate } from './dto/getListMoviePaginate.dto';
 import { GetListMovieByDate } from './dto/getListMovieByDate.dto';
-import { DataMovieDto } from './dto/dataMovie.dto';
-import { validate } from 'class-validator';
+import { JwtService } from '@nestjs/jwt';
+import { UploadDTO } from './dto/upload.dto';
+import { UpdateMovieDto } from './dto/movieUpdate.dto';
 
 @Injectable()
 export class MovieManagementService {
+  constructor(private jwtService: JwtService) { }
 
   prisma = new PrismaClient()
 
@@ -47,7 +49,7 @@ export class MovieManagementService {
     }
   }
 
-  async getListMovieByDay(query1: GetListMovieByDate) {
+  async getListMovieByDate(query1: GetListMovieByDate) {
     try {
       let page = Number(query1.soTrang);
       let pageSize = Number(query1.soPhanTuTrenTrang);
@@ -73,11 +75,11 @@ export class MovieManagementService {
     }
   }
 
-  async getMovieById(param: string) {
+  async getMovieById(maPhim: string) {
     try {
       let data = await this.prisma.phim.findUnique({
         where: {
-          ma_phim: Number(param)
+          ma_phim: Number(maPhim)
         }
       })
       return responseData(200, "Successfully", data)
@@ -87,7 +89,7 @@ export class MovieManagementService {
   }
 
 
-  async addMovie(formData: DataMovieDto, hinhAnh: any) {
+  async addMovie(formData: UploadDTO, hinhAnh: any) {
     try {
       let { ten_phim, trailer, mo_ta, ngay_khoi_chieu, danh_gia, hot, dang_chieu, sap_chieu } = formData
 
@@ -97,9 +99,9 @@ export class MovieManagementService {
         mo_ta,
         ngay_khoi_chieu: new Date(ngay_khoi_chieu),
         danh_gia: Number(danh_gia),
-        hot: Boolean(hot),
-        dang_chieu: Boolean(dang_chieu),
-        sap_chieu: Boolean(sap_chieu),
+        hot: Boolean(hot.toString() === "true" ? 1 : 0),
+        dang_chieu: Boolean(dang_chieu.toString() === "true" ? 1 : 0),
+        sap_chieu: Boolean(sap_chieu.toString() === "true" ? 1 : 0),
         hinh_anh: hinhAnh.originalname
       }
       await this.prisma.phim.create({ data: movie })
@@ -111,4 +113,47 @@ export class MovieManagementService {
     }
   }
 
+  async deleteMovie(maPhim: string) {
+    try {
+      await this.prisma.$transaction([
+        this.prisma.phim.delete({
+          where: { ma_phim: Number(maPhim) }
+        }),
+        this.prisma.lichChieu.deleteMany({
+          where: { ma_phim: Number(maPhim) }
+        })
+      ])
+      return responseData(200, "Handled successfully", "Deleted successfully")
+
+    } catch (exception) {
+      console.log("😐 ~ MovieManagementService ~ deleteMovie ~ exception:👉", exception)
+      throw new HttpException("Error...", HttpStatus.INTERNAL_SERVER_ERROR)
+    }
+
+  }
+
+  async updateMovie(body: UpdateMovieDto, hinhAnh: any) {
+    try {
+      let { ma_phim, ten_phim, trailer, mo_ta, ngay_khoi_chieu, danh_gia, hot, dang_chieu, sap_chieu } = body
+      console.log("😐 ~ MovieManagementService ~ updateMovie ~ body:👉", body)
+
+      let updateInfo = {
+        ten_phim,
+        trailer,
+        mo_ta,
+        ngay_khoi_chieu,
+        danh_gia: Number(danh_gia),
+        hot: Boolean(hot.toString() === "true" ? 1 : 0),
+        dang_chieu: Boolean(dang_chieu.toString() === "true" ? 1 : 0),
+        sap_chieu: Boolean(sap_chieu.toString() === "true" ? 1 : 0),
+        hinh_anh: hinhAnh.originalname
+      }
+
+
+
+
+    } catch (exception) {
+      throw new HttpException("Error...", HttpStatus.INTERNAL_SERVER_ERROR)
+    }
+  }
 }
