@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Param, Delete, Query, ValidationPipe, UseInterceptors, UploadedFile, Body, Req, BadRequestException, UseGuards, ParseFilePipe, MaxFileSizeValidator, FileTypeValidator, ParseFilePipeBuilder, HttpStatus, Put } from '@nestjs/common';
+import { Controller, Get, Post, Param, Delete, Query, ValidationPipe, UseInterceptors, UploadedFile, Body, Req, BadRequestException, UseGuards, ParseFilePipe, MaxFileSizeValidator, FileTypeValidator, ParseFilePipeBuilder, HttpStatus, Put, ForbiddenException } from '@nestjs/common';
 import { MovieManagementService } from './movie-management.service';
 import { ApiBearerAuth, ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { GetListMoviePaginate } from './dto/getListMoviePaginate.dto';
@@ -73,14 +73,7 @@ export class MovieManagementController {
   @Put("CapNhatPhimUpload")
   @UseInterceptors(addImg())
   updateMovie(@Body() body: UpdateMovieDto,
-    @UploadedFile(
-      new ParseFilePipeBuilder()
-        .addMaxSizeValidator({
-          maxSize: 500000
-        }).build({
-          errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY
-        }),
-    ) hinhAnh: Express.Multer.File[]
+    @UploadedFile() hinhAnh: Express.Multer.File[]
   ) {
     return this.movieService.updateMovie(body, hinhAnh)
   }

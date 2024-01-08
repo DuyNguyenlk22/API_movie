@@ -135,22 +135,28 @@ export class MovieManagementService {
   async updateMovie(body: UpdateMovieDto, hinhAnh: any) {
     try {
       let { ma_phim, ten_phim, trailer, mo_ta, ngay_khoi_chieu, danh_gia, hot, dang_chieu, sap_chieu } = body
-      console.log("😐 ~ MovieManagementService ~ updateMovie ~ body:👉", body)
+      let detailMovie = await this.getMovieById(ma_phim.toString())
 
       let updateInfo = {
         ten_phim,
         trailer,
         mo_ta,
-        ngay_khoi_chieu,
+        ngay_khoi_chieu: new Date(ngay_khoi_chieu),
         danh_gia: Number(danh_gia),
         hot: Boolean(hot.toString() === "true" ? 1 : 0),
         dang_chieu: Boolean(dang_chieu.toString() === "true" ? 1 : 0),
         sap_chieu: Boolean(sap_chieu.toString() === "true" ? 1 : 0),
-        hinh_anh: hinhAnh.originalname
+        hinh_anh: hinhAnh === undefined ? detailMovie.content.hinh_anh : hinhAnh?.originalname
       }
 
+      let newData = await this.prisma.phim.update({
+        where: {
+          ma_phim: Number(ma_phim),
+        },
+        data: updateInfo
+      })
 
-
+      return responseData(200, "Updated successfully", newData)
 
     } catch (exception) {
       throw new HttpException("Error...", HttpStatus.INTERNAL_SERVER_ERROR)
