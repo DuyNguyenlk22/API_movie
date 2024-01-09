@@ -1,11 +1,12 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
 import { responseData } from 'src/config/response';
+import { MovieManagementService } from 'src/movie-management/movie-management.service';
 
 @Injectable()
 export class TheaterService {
   prisma = new PrismaClient()
-  constructor() { }
+  constructor(private movieService: MovieManagementService) { }
 
   async getInfoTheater(query: { maHeThongRap: string }) {
     try {
@@ -66,10 +67,8 @@ export class TheaterService {
             include: {
               RapPhim: {
                 include: {
-                  LichChieu: {
-                    include: {
-                      Phim: true
-                    }
+                  Phim: {
+                    include: { LichChieu: true }
                   }
                 }
               }
@@ -82,8 +81,45 @@ export class TheaterService {
           }
         }
       })
-
       return responseData(200, "Handled successfully", data)
+
+    } catch (exception) {
+      console.log("😐 ~ TheaterService ~ layThongTinLichChieuHeThongRap ~ exception:👉", exception)
+    }
+  }
+
+  async layThongTinLichChieuPhim(query: { maPhim: string }) {
+    try {
+      let { maPhim } = query
+      if (!maPhim) responseData(400, "Data not founded", "maPhim not exist")
+      const infoMovie = await this.movieService.getMovieById(maPhim)
+
+      const cumRapChieu = await this.prisma.heThongRap.findMany({
+        include: {
+          CumRap: {
+            include: {
+              RapPhim: {
+                select: {
+                  ten_rap: true,
+                  ma_rap: true,
+                  LichChieu: {
+                    select: {
+                      ma_lich_chieu: true,
+                      ngay_gio_chieu: true,
+                      gia_ve: true
+                    }
+                  }
+                },
+                where: {
+                  ma_phim: Number(maPhim)
+                }
+              }
+            }
+          }
+        }
+      })
+
+      return responseData(200, "Handled successfully", { ...infoMovie.content, heThongRapChieu: cumRapChieu })
 
     } catch (exception) {
       console.log("😐 ~ TheaterService ~ layThongTinLichChieuHeThongRap ~ exception:👉", exception)

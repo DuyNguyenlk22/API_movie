@@ -98,15 +98,19 @@ model Phim {
   sap_chieu       Boolean?
   Banner          Banner[]
   LichChieu       LichChieu[]
+  RapPhim         RapPhim[]
 }
 
 model RapPhim {
   ma_rap     Int         @id @default(autoincrement())
   ten_rap    String?     @db.VarChar(255)
   ma_cum_rap String?     @db.VarChar(255)
+  ma_phim    Int?
   Ghe        Ghe[]
   LichChieu  LichChieu[]
   CumRap     CumRap?     @relation(fields: [ma_cum_rap], references: [ma_cum_rap], onDelete: NoAction, onUpdate: NoAction, map: "RapPhim_ibfk_1")
+  Phim       Phim?       @relation(fields: [ma_phim], references: [ma_phim], onDelete: NoAction, onUpdate: NoAction, map: "RapPhim_ibfk_2")
 
   @@index([ma_cum_rap], map: "ma_cum_rap")
+  @@index([ma_phim], map: "ma_phim")
 }
