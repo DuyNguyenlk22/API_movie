@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { ForbiddenException, HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InfoUser } from './dto/infoUser.dto';
 import { PrismaClient } from '@prisma/client';
 import { responseData } from 'src/config/response';
@@ -6,6 +6,9 @@ import * as bcrypt from "bcrypt"
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { InfoLogin } from './dto/infoLogin.dto';
+import { ListUserPaginatedDto } from './dto/listUserPaginate.dto';
+import { FindUserDto } from './dto/findUser.dto';
+import { AddUserDto } from './dto/addUser.dto';
 
 @Injectable()
 export class UserService {
@@ -17,7 +20,7 @@ export class UserService {
         private configService: ConfigService
     ) { }
 
-    async signIn(body: InfoUser) {
+    async signUp(body: InfoUser) {
         try {
             let { tai_khoan, email, mat_khau, ho_ten, so_dt } = body
 
@@ -48,16 +51,15 @@ export class UserService {
             delete results.mat_khau;
             return responseData(201, "Successfully", results)
         } catch (exception) {
-            console.log("😐 ~ UserService ~ signIn ~ exception:👉", exception)
             throw new HttpException("Error...", HttpStatus.INTERNAL_SERVER_ERROR)
         }
 
 
     }
 
-    async signUp(body1: InfoLogin) {
+    async signIn(body: InfoLogin) {
         try {
-            let { tai_khoan, mat_khau } = body1
+            let { tai_khoan, mat_khau } = body
 
             let checkUser = await this.prisma.nguoiDung.findFirst({
                 where: {
@@ -67,7 +69,7 @@ export class UserService {
             if (checkUser) {
                 if (bcrypt.compareSync(mat_khau, checkUser.mat_khau)) {
                     let token = this.jwtService.signAsync(
-                        { data: { tai_khoan: checkUser.tai_khoan } },
+                        { data: { tai_khoan: checkUser.tai_khoan, loai_nguoi_dung: checkUser.loai_nguoi_dung } },
                         { expiresIn: "20m", secret: this.configService.get("SECRET_KEY") }
                     )
                     delete checkUser.mat_khau
@@ -79,9 +81,174 @@ export class UserService {
                 return responseData(404, "Account incorect", "")
             }
         } catch (exception) {
-            console.log("😐 ~ UserService ~ signUp ~ exception:👉", exception)
             throw new HttpException("Error...", HttpStatus.INTERNAL_SERVER_ERROR)
         }
 
     }
+
+    async getListUser() {
+        try {
+            let listUser = await this.prisma.nguoiDung.findMany()
+            listUser.map((item) => {
+                return delete item.mat_khau
+            })
+            return responseData(200, "Handled successfully", listUser)
+        } catch (exception) {
+            throw new HttpException("Error...", HttpStatus.INTERNAL_SERVER_ERROR)
+        }
+    }
+
+    async getListUserPaginate(query: ListUserPaginatedDto) {
+        try {
+            let { soTrang, soPhanTuTrenTrang } = query
+            let index = (Number(soTrang) - 1) * Number(soPhanTuTrenTrang)
+            let dataCount = await this.prisma.nguoiDung.count();
+            let totalPage = Math.ceil(dataCount / Number(soPhanTuTrenTrang))
+
+            let data = await this.prisma.nguoiDung.findMany({
+                skip: index,
+                take: Number(soPhanTuTrenTrang)
+            })
+            return responseData(200, "Handled successfully",
+                {
+                    currentPage: +soTrang,
+                    count: +soPhanTuTrenTrang,
+                    totalPage,
+                    totalCount: dataCount,
+                    items: data
+                })
+        } catch (error) {
+            throw new HttpException("Error...", HttpStatus.INTERNAL_SERVER_ERROR)
+        }
+    }
+
+    async findUser(query: FindUserDto) {
+        try {
+            let searchUser = await this.prisma.nguoiDung.findMany({
+                where: {
+                    OR: [
+                        {
+                            tai_khoan: {
+                                contains: query.tuKhoa
+                            }
+                        },
+                        {
+                            email: {
+                                contains: query.tuKhoa
+                            }
+                        },
+                        {
+                            ho_ten: {
+                                contains: query.tuKhoa
+                            }
+                        }
+                    ]
+                }
+            })
+
+            return responseData(200, "Handled successfully", searchUser)
+        } catch (exception) {
+            throw new HttpException("Error...", HttpStatus.INTERNAL_SERVER_ERROR)
+        }
+    }
+
+    async findUserPaginate(query: FindUserDto) {
+        4
+        try {
+            let { soTrang, soPhanTuTrenTrang, tuKhoa } = query
+            let index = (Number(soTrang) - 1) * Number(soPhanTuTrenTrang)
+            let dataCount = await this.prisma.nguoiDung.count();
+            let totalPage = Math.ceil(dataCount / Number(soPhanTuTrenTrang))
+
+            let data = await this.prisma.nguoiDung.findMany({
+                skip: index,
+                take: Number(soPhanTuTrenTrang),
+                where: {
+                    OR: [
+                        {
+                            tai_khoan: {
+                                contains: tuKhoa
+                            }
+                        },
+                        {
+                            email: {
+                                contains: tuKhoa
+                            }
+                        },
+                        {
+                            ho_ten: {
+                                contains: tuKhoa
+                            }
+                        }
+                    ]
+                }
+            })
+            return responseData(200, "Handled successfully",
+                {
+                    currentPage: +soTrang,
+                    count: +soPhanTuTrenTrang,
+                    totalPage,
+                    totalCount: dataCount,
+                    items: data
+                })
+
+
+        } catch (exception) {
+            console.log("😐 ~ UserService ~ findUserPaginate ~ exception:👉", exception)
+        }
+    }
+
+    async addNewUser(body: AddUserDto) {
+        try {
+            let { email, tai_khoan, mat_khau, ho_ten, so_dt, loai_nguoi_dung } = body
+            let checkUser = await this.prisma.nguoiDung.findFirst({
+                where: {
+                    tai_khoan
+                }
+            })
+            if (checkUser) return responseData(404, "Account already exist", "")
+            let checkEmail = await this.prisma.nguoiDung.findFirst({
+                where: {
+                    email
+                }
+            })
+            if (checkEmail) return responseData(404, "Email already exist", "")
+            let dataUser = {
+                email,
+                tai_khoan,
+                mat_khau: bcrypt.hashSync(mat_khau, 10),
+                ho_ten,
+                so_dt,
+                loai_nguoi_dung
+            }
+            let newUser = await this.prisma.nguoiDung.create({ data: dataUser })
+            delete newUser.mat_khau
+            return responseData(201, "Handled successfully", newUser)
+
+        } catch (exception) {
+            console.log("😐 ~ UserService ~ addNewUser ~ exception:👉", exception)
+        }
+    }
+
+    async deleteUser(query: { taiKhoan: string }, req: any) {
+        try {
+            let token = req.headers.authorization.slice(7)
+            let accessToken = this.jwtService.decode(token)
+            let { loai_nguoi_dung } = accessToken.data
+
+            if (loai_nguoi_dung !== "admin") throw new HttpException("Forbidden", HttpStatus.FORBIDDEN)
+
+            let result = await this.prisma.nguoiDung.delete({
+                where: {
+                    tai_khoan: query.taiKhoan
+                }
+            })
+            delete result.mat_khau
+            return responseData(200, "Handled successfully", result)
+        } catch (exception) {
+            throw new HttpException("This user has booked cannot be deleted", HttpStatus.INTERNAL_SERVER_ERROR)
+        }
+    }
+
+
 }

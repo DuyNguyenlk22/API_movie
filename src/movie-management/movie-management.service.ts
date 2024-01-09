@@ -126,7 +126,6 @@ export class MovieManagementService {
       return responseData(200, "Handled successfully", "Deleted successfully")
 
     } catch (exception) {
-      console.log("😐 ~ MovieManagementService ~ deleteMovie ~ exception:👉", exception)
       throw new HttpException("Error...", HttpStatus.INTERNAL_SERVER_ERROR)
     }
 

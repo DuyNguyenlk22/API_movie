@@ -3,6 +3,6 @@ export const responseData = (statusCode: number, message: string, content: any) 
         statusCode,
         message,
         content,
-        dateTime: new Date()
+        dateTime: new Date().toISOString()
     }
 }
