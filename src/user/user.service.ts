@@ -70,7 +70,7 @@ export class UserService {
                 if (bcrypt.compareSync(mat_khau, checkUser.mat_khau)) {
                     let token = this.jwtService.signAsync(
                         { data: { tai_khoan: checkUser.tai_khoan, loai_nguoi_dung: checkUser.loai_nguoi_dung } },
-                        { expiresIn: "20m", secret: this.configService.get("SECRET_KEY") }
+                        { expiresIn: "3d", secret: this.configService.get("SECRET_KEY") }
                     )
                     delete checkUser.mat_khau
                     return responseData(200, "Successfully", { ...checkUser, accessToken: await token })
@@ -250,5 +250,126 @@ export class UserService {
         }
     }
 
+    async getUserById(req: any) {
+        try {
+            let token = req.headers.authorization.slice(7)
+            let accessToken = this.jwtService.decode(token).data
+
+            // let results = await this.prisma.nguoiDung.findFirst({
+            //     where: {
+            //         tai_khoan: accessToken.tai_khoan
+            //     },
+            //     include: {
+            //         DatVe: {
+            //             select: {
+            //                 Ghe: {
+            //                     select: {
+            //                         ten_ghe: true,
+            //                         loai_ghe: true,
+            //                         RapPhim: {
+            //                             select: {
+            //                                 ten_rap: true,
+            //                                 ma_rap:true,
+            //                                 CumRap: {
+            //                                     select: {
+            //                                         ten_cum_rap: true,
+            //                                         ma_cum_rap: true,
+            //                                         HeThongRap: true
+            //                                     }
+            //                                 }
+            //                             }
+            //                         }
+            //                     }
+            //                 }
+            //             }
+            //         }
+            //     }
+            // })
+
+
+            let rs1 = await this.prisma.nguoiDung.findFirst({
+                where: { tai_khoan: accessToken.tai_khoan }
+            })
+            let rs2 = await this.prisma.phim.findMany({
+                select: {
+                    ten_phim: true,
+                    hinh_anh: true,
+                    RapPhim: {
+                        select: {
+                            ten_rap: true,
+                            ma_rap: true,
+                            CumRap: {
+                                select: {
+                                    ma_cum_rap: true,
+                                    ten_cum_rap: true,
+                                    HeThongRap: {
+                                        select: {
+                                            ten_he_thong_rap: true,
+                                            ma_he_thong_rap: true
+                                        }
+                                    },
+                                }
+                            },
+                            Ghe: {
+                                select: {
+                                    ten_ghe: true,
+                                    ma_ghe: true,
+                                    DatVe: {
+                                        where: {
+                                            tai_khoan: accessToken.tai_khoan
+                                        },
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            })
+
+
+
+
+            return responseData(200, "", { ...rs1, thongTinDatVe: rs2 })
+
+
+
+            // let data = {
+            //     ...infoUser,
+            //     thongTinDatVe: [
+            //         {
+            //             danhSachGhe: [
+            //                 {
+            //                     ma_he_thong_rap:,
+            //                     ten_he_thong_rap:,
+            //                     ma_cum_rap:,
+            //                     ten_cum_rap:,
+            //                     ma_ghe:,
+            //                     ten_ghe:
+            //                 }
+            //             ]
+            //         }
+            //     ]
+            // }
+
+
+
+
+        } catch (exception) {
+            console.log("😐 ~ UserService ~ getUserById ~ exception:👉", exception)
+        }
+    }
+
+    async updateUser(body: AddUserDto, req: any) {
+        try {
+            let { tai_khoan, email, ho_ten, so_dt, loai_nguoi_dung } = body
+            let token = req.headers.authorization.slice(7)
+            let accessToken = this.jwtService.decode(token).data
+
+
+
+        } catch (exception) {
+            console.log("😐 ~ UserService ~ updateUser ~ exception:👉", exception)
+        }
+    }
 
 }

@@ -57,7 +57,6 @@ export class TheaterService {
 
   async layThongTinLichChieuHeThongRap(query: { maHeThongRap: string }) {
     try {
-
       let { maHeThongRap } = query
       if (maHeThongRap === "") maHeThongRap = "BHD"
 

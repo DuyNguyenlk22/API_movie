@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, HttpStatus, Query, Req, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, HttpStatus, Query, Req, UseGuards, Put } from '@nestjs/common';
 import { UserService } from './user.service';
 import { InfoUser } from './dto/infoUser.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
@@ -63,9 +63,21 @@ export class UserController {
     return this.userService.addNewUser(body)
   }
 
+  @UseGuards(JwtGuard)
+  @ApiBearerAuth()
   @Delete("XoaNguoiDung")
   deleteUser(@Query() query: { taiKhoan: string }, @Req() req: Request) {
     return this.userService.deleteUser(query, req)
+  }
+
+  @Get("ThongTinTaiKhoan")
+  getUserById(@Req() req: Request) {
+    return this.userService.getUserById(req)
+  }
+
+  @Put("CapNhatThongTinNguoiDung")
+  updateUser(@Body() body: AddUserDto, @Req() req: Request) {
+    return this.userService.updateUser(body, req)
   }
 
 

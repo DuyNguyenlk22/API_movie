@@ -3,6 +3,7 @@ import { PrismaClient } from '@prisma/client';
 import { responseData } from 'src/config/response';
 import { BookingDto } from './dto/booking.dto';
 import { JwtService } from '@nestjs/jwt';
+import { ShowtimesDto } from './dto/showtimes.dto';
 
 @Injectable()
 export class BookingService {
@@ -101,6 +102,25 @@ export class BookingService {
 
     } catch (exception) {
       console.log("😐 ~ BookingService ~ booking ~ exception:👉", exception)
+    }
+  }
+
+  async addShowtimes(body: ShowtimesDto) {
+    try {
+
+      let { ma_phim, ngay_gio_chieu, ma_rap, gia_ve } = body
+
+      let newShowtimes = {
+        ma_phim,
+        ngay_gio_chieu: new Date(ngay_gio_chieu),
+        ma_rap,
+        gia_ve
+      }
+
+      await this.prisma.lichChieu.create({ data: newShowtimes })
+      return responseData(201, "Handled successfully", newShowtimes)
+    } catch (exception) {
+      console.log("😐 ~ BookingService ~ addShowtimes ~ exception:👉", exception)
     }
   }
 }
