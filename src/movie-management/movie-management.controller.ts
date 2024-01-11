@@ -11,8 +11,8 @@ import { UpdateMovieDto } from './dto/movieUpdate.dto';
 
 
 @ApiTags("QuanLyPhim")
-// @UseGuards(JwtGuard)
-// @ApiBearerAuth()
+@UseGuards(JwtGuard)
+@ApiBearerAuth()
 @Controller('api/QuanLyPhim')
 export class MovieManagementController {
 

@@ -1,4 +1,4 @@
-import { ForbiddenException, HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InfoUser } from './dto/infoUser.dto';
 import { PrismaClient } from '@prisma/client';
 import { responseData } from 'src/config/response';
@@ -365,10 +365,25 @@ export class UserService {
             let token = req.headers.authorization.slice(7)
             let accessToken = this.jwtService.decode(token).data
 
+            if (tai_khoan !== accessToken.tai_khoan) throw new HttpException("Tài khoản không thể thay đổi", HttpStatus.BAD_REQUEST)
 
+            let newData = {
+                ho_ten,
+                email,
+                so_dt,
+                loai_nguoi_dung,
+            }
+
+            let result = await this.prisma.nguoiDung.update({
+                data: newData,
+                where: {
+                    tai_khoan: accessToken.tai_khoan
+                }
+            })
+            return responseData(200, "Cập nhật thành công", result)
 
         } catch (exception) {
-            console.log("😐 ~ UserService ~ updateUser ~ exception:👉", exception)
+            return responseData(exception.status, exception.response, "")
         }
     }
 

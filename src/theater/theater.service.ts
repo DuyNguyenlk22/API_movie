@@ -40,14 +40,16 @@ export class TheaterService {
           }
         },
         include: {
-          RapPhim: true
+          RapPhim: {
+            select: {
+              ma_rap: true,
+              ten_rap: true
+            }
+          }
         }
       })
       data.map((item) => {
         delete item.ma_he_thong_rap
-        item.RapPhim.map((item) => {
-          delete item.ma_cum_rap
-        })
       })
       return responseData(200, "Handled successfully", data)
     } catch (exception) {
@@ -55,33 +57,48 @@ export class TheaterService {
     }
   }
 
-  async layThongTinLichChieuHeThongRap(query: { maHeThongRap: string }) {
+  async layThongTinLichChieuHeThongRap() {
     try {
-      let { maHeThongRap } = query
-      if (maHeThongRap === "") maHeThongRap = "BHD"
-
-      let data = await this.prisma.heThongRap.findMany({
+      let heThongRap = await this.prisma.heThongRap.findMany({
         include: {
           CumRap: {
             include: {
               RapPhim: {
                 include: {
-                  Phim: {
-                    include: { LichChieu: true }
-                  }
+                  Phim: true,
                 }
               }
             }
           }
-        },
-        where: {
-          ma_he_thong_rap: {
-            contains: maHeThongRap
-          }
         }
       })
-      return responseData(200, "Handled successfully", data)
 
+      let allLichChieu = await this.prisma.lichChieu.findMany()
+      let results = heThongRap.map((item) => {
+        return {
+          ma_he_thong_rap: item.ma_he_thong_rap,
+          ten_he_thong_rap: item.ten_he_thong_rap,
+          logo: item.logo,
+          lstCumRap: item.CumRap.map((item1) => {
+            return {
+              ma_cum_rap: item1.ma_cum_rap,
+              ten_cum_rap: item1.ten_cum_rap,
+              dia_chi: item1.dia_chi,
+              danhSachPhim: item1.RapPhim.map((item2) => {
+                return {
+                  ...item2.Phim,
+                  lstLichChieuTheoPhim: allLichChieu.map((lichChieu) => {
+                    if (lichChieu.ma_phim === item2.ma_phim) {
+                      return lichChieu
+                    }
+                  }),
+                }
+              })
+            }
+          })
+        }
+      })
+      return responseData(200, "Handled successfully", results)
     } catch (exception) {
       console.log("😐 ~ TheaterService ~ layThongTinLichChieuHeThongRap ~ exception:👉", exception)
     }

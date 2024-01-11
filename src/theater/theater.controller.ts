@@ -20,9 +20,8 @@ export class TheaterController {
   }
 
   @Get("LayThongTinLichChieuHeThongRap")
-  @ApiQuery({ name: "maHeThongRap" })
-  layThongTinLichChieuHeThongRap(@Query() query: { maHeThongRap: string }) {
-    return this.theaterService.layThongTinLichChieuHeThongRap(query)
+  layThongTinLichChieuHeThongRap() {
+    return this.theaterService.layThongTinLichChieuHeThongRap()
   }
 
   @Get("LayThongTinLichChieuPhim")
