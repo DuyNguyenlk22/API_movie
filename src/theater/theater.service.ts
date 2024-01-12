@@ -62,19 +62,20 @@ export class TheaterService {
       let heThongRap = await this.prisma.heThongRap.findMany({
         include: {
           CumRap: {
-            include: {
+            select: {
+              ma_cum_rap: true,
+              ten_cum_rap: true,
+              dia_chi: true,
               RapPhim: {
-                include: {
-                  Phim: true,
-                }
+                include: { Phim: true }
               }
             }
           }
         }
       })
 
-      let allLichChieu = await this.prisma.lichChieu.findMany()
-      let results = heThongRap.map((item) => {
+      let lichChieuArr = await this.prisma.lichChieu.findMany()
+      const results = heThongRap.map((item) => {
         return {
           ma_he_thong_rap: item.ma_he_thong_rap,
           ten_he_thong_rap: item.ten_he_thong_rap,
@@ -87,11 +88,7 @@ export class TheaterService {
               danhSachPhim: item1.RapPhim.map((item2) => {
                 return {
                   ...item2.Phim,
-                  lstLichChieuTheoPhim: allLichChieu.map((lichChieu) => {
-                    if (lichChieu.ma_phim === item2.ma_phim) {
-                      return lichChieu
-                    }
-                  }),
+                  lstLichChieuTheoPhim: lichChieuArr.filter((item3) => item3.ma_phim === item2.ma_phim)
                 }
               })
             }
@@ -123,11 +120,11 @@ export class TheaterService {
                       ma_lich_chieu: true,
                       ngay_gio_chieu: true,
                       gia_ve: true
+                    },
+                    where: {
+                      ma_phim: Number(maPhim)
                     }
                   }
-                },
-                where: {
-                  ma_phim: Number(maPhim)
                 }
               }
             }

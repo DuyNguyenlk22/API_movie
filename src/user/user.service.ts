@@ -255,105 +255,40 @@ export class UserService {
             let token = req.headers.authorization.slice(7)
             let accessToken = this.jwtService.decode(token).data
 
-            // let results = await this.prisma.nguoiDung.findFirst({
-            //     where: {
-            //         tai_khoan: accessToken.tai_khoan
-            //     },
-            //     include: {
-            //         DatVe: {
-            //             select: {
-            //                 Ghe: {
-            //                     select: {
-            //                         ten_ghe: true,
-            //                         loai_ghe: true,
-            //                         RapPhim: {
-            //                             select: {
-            //                                 ten_rap: true,
-            //                                 ma_rap:true,
-            //                                 CumRap: {
-            //                                     select: {
-            //                                         ten_cum_rap: true,
-            //                                         ma_cum_rap: true,
-            //                                         HeThongRap: true
-            //                                     }
-            //                                 }
-            //                             }
-            //                         }
-            //                     }
-            //                 }
-            //             }
-            //         }
-            //     }
-            // })
-
-
-            let rs1 = await this.prisma.nguoiDung.findFirst({
+            let infoUser = await this.prisma.nguoiDung.findUnique({
                 where: { tai_khoan: accessToken.tai_khoan }
             })
-            let rs2 = await this.prisma.phim.findMany({
+            let lichChieuTheoPhim = await this.prisma.phim.findMany({
                 select: {
-                    ten_phim: true,
-                    hinh_anh: true,
-                    RapPhim: {
-                        select: {
-                            ten_rap: true,
-                            ma_rap: true,
-                            CumRap: {
-                                select: {
-                                    ma_cum_rap: true,
-                                    ten_cum_rap: true,
-                                    HeThongRap: {
-                                        select: {
-                                            ten_he_thong_rap: true,
-                                            ma_he_thong_rap: true
+                    ten_phim: true, hinh_anh: true,
+                    LichChieu: {
+                        include: {
+                            DatVe: {
+                                include: {
+                                    Ghe: {
+                                        include: {
+                                            RapPhim: {
+                                                include: {
+                                                    CumRap: {
+                                                        include: { HeThongRap: true }
+                                                    }
+                                                }
+                                            }
                                         }
-                                    },
-                                }
-                            },
-                            Ghe: {
-                                select: {
-                                    ten_ghe: true,
-                                    ma_ghe: true,
-                                    DatVe: {
-                                        where: {
-                                            tai_khoan: accessToken.tai_khoan
-                                        },
                                     }
-                                }
+                                },
+                                where: { tai_khoan: accessToken.tai_khoan }
                             }
                         }
                     }
                 }
             })
-
-
-
-
-            return responseData(200, "", { ...rs1, thongTinDatVe: rs2 })
-
-
-
-            // let data = {
-            //     ...infoUser,
-            //     thongTinDatVe: [
-            //         {
-            //             danhSachGhe: [
-            //                 {
-            //                     ma_he_thong_rap:,
-            //                     ten_he_thong_rap:,
-            //                     ma_cum_rap:,
-            //                     ten_cum_rap:,
-            //                     ma_ghe:,
-            //                     ten_ghe:
-            //                 }
-            //             ]
-            //         }
-            //     ]
-            // }
-
-
-
-
+            delete infoUser.mat_khau
+            let result = {
+                ...infoUser,
+                thongTinDatVe: lichChieuTheoPhim
+            }
+            return responseData(200, "Handled successfully", result)
         } catch (exception) {
             console.log("😐 ~ UserService ~ getUserById ~ exception:👉", exception)
         }
