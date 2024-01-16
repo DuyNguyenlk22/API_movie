@@ -75,6 +75,7 @@ export class TheaterService {
       })
 
       let lichChieuArr = await this.prisma.lichChieu.findMany()
+
       const results = heThongRap.map((item) => {
         return {
           ma_he_thong_rap: item.ma_he_thong_rap,

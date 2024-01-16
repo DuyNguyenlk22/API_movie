@@ -1,11 +1,14 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Req } from '@nestjs/common';
+import { Controller, Get, Post, Body, Query, Req, UseGuards } from '@nestjs/common';
 import { BookingService } from './booking.service';
-import { ApiQuery, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { BookingDto } from './dto/booking.dto';
 import { Request } from 'express';
 import { ShowtimesDto } from './dto/showtimes.dto';
+import { JwtGuard } from 'src/guard/jwt.guard';
 
 @ApiTags("QuanLyDatVe")
+@UseGuards(JwtGuard)
+@ApiBearerAuth()
 @Controller('api/QuanLyDatVe')
 export class BookingController {
   constructor(private readonly bookingService: BookingService) { }

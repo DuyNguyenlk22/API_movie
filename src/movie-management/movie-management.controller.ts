@@ -1,6 +1,6 @@
-import { Controller, Get, Post, Param, Delete, Query, ValidationPipe, UseInterceptors, UploadedFile, Body, Req, BadRequestException, UseGuards, ParseFilePipe, MaxFileSizeValidator, FileTypeValidator, ParseFilePipeBuilder, HttpStatus, Put, ForbiddenException } from '@nestjs/common';
+import { Controller, Get, Post, Delete, Query, ValidationPipe, UseInterceptors, UploadedFile, Body, Req, BadRequestException, UseGuards, ParseFilePipe, MaxFileSizeValidator, FileTypeValidator, ParseFilePipeBuilder, HttpStatus, Put, ForbiddenException } from '@nestjs/common';
 import { MovieManagementService } from './movie-management.service';
-import { ApiBearerAuth, ApiBody, ApiConsumes, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { GetListMoviePaginate } from './dto/getListMoviePaginate.dto';
 import { GetListMovieByDate } from './dto/getListMovieByDate.dto';
 import { UploadDTO } from './dto/upload.dto';

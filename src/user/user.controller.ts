@@ -1,7 +1,7 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, HttpStatus, Query, Req, UseGuards, Put } from '@nestjs/common';
+import { Controller, Get, Post, Body, Delete, HttpCode, HttpStatus, Query, Req, UseGuards, Put } from '@nestjs/common';
 import { UserService } from './user.service';
 import { InfoUser } from './dto/infoUser.dto';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { InfoLogin } from './dto/infoLogin.dto';
 import { ListUserPaginatedDto } from './dto/listUserPaginate.dto';
 import { FindUserDto } from './dto/findUser.dto';
@@ -11,7 +11,6 @@ import { JwtGuard } from 'src/guard/jwt.guard';
 
 
 @ApiTags("QuanLyNguoiDung")
-
 @Controller('api/QuanLyNguoiDung')
 export class UserController {
   constructor(private readonly userService: UserService) { }
@@ -45,7 +44,8 @@ export class UserController {
   @UseGuards(JwtGuard)
   @ApiBearerAuth()
   @Get("TimKiemNguoiDung")
-  findUser(@Query() query: FindUserDto) {
+  @ApiQuery({ name: "tuKhoa" })
+  findUser(@Query() query: { tuKhoa: string }) {
     return this.userService.findUser(query)
   }
 
@@ -70,11 +70,15 @@ export class UserController {
     return this.userService.deleteUser(query, req)
   }
 
+  @UseGuards(JwtGuard)
+  @ApiBearerAuth()
   @Get("ThongTinTaiKhoan")
   getUserById(@Req() req: Request) {
     return this.userService.getUserById(req)
   }
 
+  @UseGuards(JwtGuard)
+  @ApiBearerAuth()
   @Put("CapNhatThongTinNguoiDung")
   updateUser(@Body() body: AddUserDto, @Req() req: Request) {
     return this.userService.updateUser(body, req)

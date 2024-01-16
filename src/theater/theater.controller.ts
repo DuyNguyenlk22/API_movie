@@ -1,8 +1,11 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
+import { Controller, Get, Query, UseGuards } from '@nestjs/common';
 import { TheaterService } from './theater.service';
-import { ApiQuery, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { JwtGuard } from 'src/guard/jwt.guard';
 
 @ApiTags("QuanLyRap")
+@UseGuards(JwtGuard)
+@ApiBearerAuth()
 @Controller('api/QuanLyRap')
 export class TheaterController {
   constructor(private readonly theaterService: TheaterService) { }

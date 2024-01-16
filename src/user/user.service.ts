@@ -15,27 +15,16 @@ export class UserService {
 
     prisma = new PrismaClient()
 
-    constructor(
-        private jwtService: JwtService,
-        private configService: ConfigService
-    ) { }
+    constructor(private jwtService: JwtService, private configService: ConfigService) { }
 
     async signUp(body: InfoUser) {
         try {
             let { tai_khoan, email, mat_khau, ho_ten, so_dt } = body
 
-            let checkUser = await this.prisma.nguoiDung.findFirst({
-                where: {
-                    tai_khoan,
-                }
-            })
+            let checkUser = await this.prisma.nguoiDung.findFirst({ where: { tai_khoan, } })
             if (checkUser) return responseData(403, "Account already exists", "")
 
-            let checkEmail = await this.prisma.nguoiDung.findFirst({
-                where: {
-                    email,
-                }
-            })
+            let checkEmail = await this.prisma.nguoiDung.findFirst({ where: { email, } })
             if (checkEmail) return responseData(404, "Email already exists", "")
 
             let dataUser = {
@@ -53,32 +42,25 @@ export class UserService {
         } catch (exception) {
             throw new HttpException("Error...", HttpStatus.INTERNAL_SERVER_ERROR)
         }
-
-
     }
 
     async signIn(body: InfoLogin) {
         try {
             let { tai_khoan, mat_khau } = body
-
-            let checkUser = await this.prisma.nguoiDung.findFirst({
-                where: {
-                    tai_khoan,
-                }
-            })
+            let checkUser = await this.prisma.nguoiDung.findFirst({ where: { tai_khoan, } })
             if (checkUser) {
                 if (bcrypt.compareSync(mat_khau, checkUser.mat_khau)) {
                     let token = this.jwtService.signAsync(
                         { data: { tai_khoan: checkUser.tai_khoan, loai_nguoi_dung: checkUser.loai_nguoi_dung } },
-                        { expiresIn: "3d", secret: this.configService.get("SECRET_KEY") }
+                        { expiresIn: "5d", secret: this.configService.get("SECRET_KEY") }
                     )
                     delete checkUser.mat_khau
                     return responseData(200, "Successfully", { ...checkUser, accessToken: await token })
                 } else {
-                    return responseData(404, "Password incorect", "")
+                    return responseData(404, "Password incorrect", "")
                 }
             } else {
-                return responseData(404, "Account incorect", "")
+                return responseData(404, "Account incorrect", "")
             }
         } catch (exception) {
             throw new HttpException("Error...", HttpStatus.INTERNAL_SERVER_ERROR)
@@ -122,30 +104,17 @@ export class UserService {
         }
     }
 
-    async findUser(query: FindUserDto) {
+    async findUser(query: { tuKhoa: string }) {
         try {
             let searchUser = await this.prisma.nguoiDung.findMany({
                 where: {
                     OR: [
-                        {
-                            tai_khoan: {
-                                contains: query.tuKhoa
-                            }
-                        },
-                        {
-                            email: {
-                                contains: query.tuKhoa
-                            }
-                        },
-                        {
-                            ho_ten: {
-                                contains: query.tuKhoa
-                            }
-                        }
+                        { tai_khoan: { contains: query.tuKhoa } },
+                        { email: { contains: query.tuKhoa } },
+                        { ho_ten: { contains: query.tuKhoa } }
                     ]
                 }
             })
-
             return responseData(200, "Handled successfully", searchUser)
         } catch (exception) {
             throw new HttpException("Error...", HttpStatus.INTERNAL_SERVER_ERROR)
@@ -153,7 +122,6 @@ export class UserService {
     }
 
     async findUserPaginate(query: FindUserDto) {
-        4
         try {
             let { soTrang, soPhanTuTrenTrang, tuKhoa } = query
             let index = (Number(soTrang) - 1) * Number(soPhanTuTrenTrang)
@@ -165,21 +133,9 @@ export class UserService {
                 take: Number(soPhanTuTrenTrang),
                 where: {
                     OR: [
-                        {
-                            tai_khoan: {
-                                contains: tuKhoa
-                            }
-                        },
-                        {
-                            email: {
-                                contains: tuKhoa
-                            }
-                        },
-                        {
-                            ho_ten: {
-                                contains: tuKhoa
-                            }
-                        }
+                        { tai_khoan: { contains: tuKhoa } },
+                        { email: { contains: tuKhoa } },
+                        { ho_ten: { contains: tuKhoa } }
                     ]
                 }
             })
@@ -191,8 +147,6 @@ export class UserService {
                     totalCount: dataCount,
                     items: data
                 })
-
-
         } catch (exception) {
             console.log("😐 ~ UserService ~ findUserPaginate ~ exception:👉", exception)
         }
@@ -201,17 +155,9 @@ export class UserService {
     async addNewUser(body: AddUserDto) {
         try {
             let { email, tai_khoan, mat_khau, ho_ten, so_dt, loai_nguoi_dung } = body
-            let checkUser = await this.prisma.nguoiDung.findFirst({
-                where: {
-                    tai_khoan
-                }
-            })
+            let checkUser = await this.prisma.nguoiDung.findFirst({ where: { tai_khoan } })
             if (checkUser) return responseData(404, "Account already exist", "")
-            let checkEmail = await this.prisma.nguoiDung.findFirst({
-                where: {
-                    email
-                }
-            })
+            let checkEmail = await this.prisma.nguoiDung.findFirst({ where: { email } })
             if (checkEmail) return responseData(404, "Email already exist", "")
             let dataUser = {
                 email,
@@ -224,7 +170,6 @@ export class UserService {
             let newUser = await this.prisma.nguoiDung.create({ data: dataUser })
             delete newUser.mat_khau
             return responseData(201, "Handled successfully", newUser)
-
         } catch (exception) {
             console.log("😐 ~ UserService ~ addNewUser ~ exception:👉", exception)
         }
@@ -254,39 +199,40 @@ export class UserService {
         try {
             let token = req.headers.authorization.slice(7)
             let accessToken = this.jwtService.decode(token).data
-
-            let infoUser = await this.prisma.nguoiDung.findUnique({
-                where: { tai_khoan: accessToken.tai_khoan }
-            })
-            let lichChieuTheoPhim = await this.prisma.phim.findMany({
-                select: {
-                    ten_phim: true, hinh_anh: true,
-                    LichChieu: {
-                        include: {
-                            DatVe: {
-                                include: {
-                                    Ghe: {
-                                        include: {
-                                            RapPhim: {
-                                                include: {
-                                                    CumRap: {
-                                                        include: { HeThongRap: true }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                },
-                                where: { tai_khoan: accessToken.tai_khoan }
-                            }
-                        }
-                    }
-                }
-            })
+            let infoUser = await this.prisma.nguoiDung.findUnique({ where: { tai_khoan: accessToken.tai_khoan } })
             delete infoUser.mat_khau
-            let result = {
+            let thongTinPhim = await this.prisma.datVe.findMany({
+                where: { tai_khoan: accessToken.tai_khoan },
+                include: { LichChieu: true, Ghe: { include: { RapPhim: { include: { CumRap: { include: { HeThongRap: true } } } } } } }
+            })
+
+            const thongTinDatVe = await Promise.all(
+                thongTinPhim.map(async (item) => {
+                    const movie = await this.prisma.phim.findUnique({
+                        where: { ma_phim: item.LichChieu.ma_phim },
+                        select: { ten_phim: true, hinh_anh: true }
+                    })
+                    const danhSachGhe = {
+                        ma_he_thong_rap: item.Ghe.RapPhim.CumRap.HeThongRap.ma_he_thong_rap,
+                        ten_he_thong_rap: item.Ghe.RapPhim.CumRap.HeThongRap.ten_he_thong_rap,
+                        ma_cum_rap: item.Ghe.RapPhim.CumRap.ten_cum_rap,
+                        ten_cum_rap: item.Ghe.RapPhim.CumRap.ma_cum_rap,
+                        ma_rap: item.Ghe.RapPhim.ma_rap,
+                        ten_rap: item.Ghe.RapPhim.ten_rap,
+                        ma_ghe: item.Ghe.ma_ghe,
+                        ten_ghe: item.Ghe.ten_ghe
+                    }
+                    return {
+                        danhSachGhe,
+                        ngay_dat: item.ngay_dat,
+                        gia_ve: item.gia_ve,
+                        ...movie
+                    }
+                })
+            )
+            const result = {
                 ...infoUser,
-                thongTinDatVe: lichChieuTheoPhim
+                thongTinDatVe
             }
             return responseData(200, "Handled successfully", result)
         } catch (exception) {
@@ -308,15 +254,11 @@ export class UserService {
                 so_dt,
                 loai_nguoi_dung,
             }
-
             let result = await this.prisma.nguoiDung.update({
                 data: newData,
-                where: {
-                    tai_khoan: accessToken.tai_khoan
-                }
+                where: { tai_khoan: accessToken.tai_khoan }
             })
             return responseData(200, "Cập nhật thành công", result)
-
         } catch (exception) {
             return responseData(exception.status, exception.response, "")
         }

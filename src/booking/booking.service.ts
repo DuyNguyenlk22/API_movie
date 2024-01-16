@@ -1,9 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, ForbiddenException, HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
 import { responseData } from 'src/config/response';
-import { BookingDto } from './dto/booking.dto';
 import { JwtService } from '@nestjs/jwt';
 import { ShowtimesDto } from './dto/showtimes.dto';
+import { BookingDto } from './dto/booking.dto';
 
 @Injectable()
 export class BookingService {
@@ -17,39 +17,17 @@ export class BookingService {
       let thongTinPhim = await this.prisma.lichChieu.findFirst({
         where: { ma_lich_chieu: Number(maLichChieu) },
         include: {
-          Phim: {
-            select: {
-              ten_phim: true,
-              hinh_anh: true
-            }
-          },
-          RapPhim: {
-            select: {
-              ten_rap: true,
-              CumRap: {
-                select: {
-                  ten_cum_rap: true,
-                  dia_chi: true,
-
-                }
-              }
-            }
-          }
+          Phim: { select: { ten_phim: true, hinh_anh: true } },
+          RapPhim: { select: { ten_rap: true, CumRap: { select: { ten_cum_rap: true, dia_chi: true, } } } }
         }
       })
       let danhSachGhe = await this.prisma.lichChieu.findFirst({
         where: { ma_lich_chieu: Number(maLichChieu) },
-        select: {
-          RapPhim: {
-            select: {
-              Ghe: true
-            }
-          }
-        }
+        select: { RapPhim: { select: { Ghe: true } } }
       })
       let { ma_lich_chieu, ngay_gio_chieu, Phim, RapPhim } = thongTinPhim
 
-      return responseData(200, "Handled successfully", {
+      let results = {
         thongTinPhim: {
           ma_lich_chieu,
           ten_cum_rap: RapPhim.CumRap.ten_cum_rap,
@@ -58,9 +36,11 @@ export class BookingService {
           ten_phim: Phim.ten_phim,
           hinh_anh: Phim.hinh_anh,
           ngay_gio_chieu
-        }
-        , danhSachGhe: danhSachGhe.RapPhim.Ghe
-      })
+        },
+        danhSachGhe: danhSachGhe.RapPhim.Ghe
+      }
+
+      return responseData(200, "Handled successfully", results)
     } catch (exception) {
       console.log("😐 ~ BookingService ~ layDanhSachPhongVe ~ exception:👉", exception)
     }
@@ -69,39 +49,49 @@ export class BookingService {
   async booking(body: BookingDto, req: any) {
     try {
       let token = req.headers.authorization.slice(7)
-      let accessToken = this.jwtService.decode(token)
+      let accessToken = this.jwtService.decode(token).data
       let { ma_lich_chieu, danh_sach_ve } = body
-      console.log("😐 ~ BookingService ~ booking ~ body:👉", body)
+
+      let lichChieu = await this.prisma.lichChieu.findUnique({
+        where: { ma_lich_chieu }
+      })
+      if (!lichChieu) throw new HttpException("ma_lich_chieu invalid", HttpStatus.NOT_FOUND)
+
+      await Promise.all(
+        danh_sach_ve.map(async (item) => {
+          const checkData = await this.prisma.ghe.findUnique({
+            where: { ma_ghe: item.ma_ghe }
+          })
+          console.log("😐 ~ BookingService ~ danh_sach_ve.map ~ checkData:👉", checkData)
+          if (checkData === null) throw new HttpException("ma_ghe invalid", HttpStatus.NOT_FOUND)
+          if (checkData.taiKhoanNguoiDat !== "") throw new HttpException("Fail...", HttpStatus.BAD_REQUEST)
+
+          await this.prisma.ghe.update({
+            where: { ma_ghe: item.ma_ghe },
+            data: {
+              daDat: true,
+              taiKhoanNguoiDat: accessToken.tai_khoan
+            }
+          })
+        }))
 
       let newData = danh_sach_ve.map((item) => {
         return {
-          tai_khoan: accessToken.data.tai_khoan,
+          tai_khoan: accessToken.tai_khoan,
           ma_lich_chieu,
           ma_ghe: item.ma_ghe,
+          ngay_dat: new Date().toISOString(),
+          gia_ve: item.gia_ve
         }
       })
       let results = await this.prisma.datVe.createMany({
         data: newData
       })
-      if (results) {
-        await this.prisma.ghe.createMany({
-          data: danh_sach_ve.map((item) => {
-            return {
-              ten_ghe: item.ten_ghe,
-              loai_ghe: item.loai_ghe,
-              ma_rap: item.ma_rap,
-              daDat: item.daDat,
-              taiKhoanNguoiDat: accessToken.data.tai_khoan,
-              giaVe: item.gia_ve
-            }
-          })
-        })
-      }
 
       return responseData(201, "Booked successfully", results)
 
-    } catch (exception) {
-      console.log("😐 ~ BookingService ~ booking ~ exception:👉", exception)
+    } catch (err) {
+      return responseData(err.status, err.response, err.option)
     }
   }
 
