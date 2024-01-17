@@ -8,6 +8,7 @@ import { FindUserDto } from './dto/findUser.dto';
 import { AddUserDto } from './dto/addUser.dto';
 import { Request } from 'express';
 import { JwtGuard } from 'src/guard/jwt.guard';
+import { UpdateUserDto } from './dto/updateUser.dto';
 
 
 @ApiTags("QuanLyNguoiDung")
@@ -80,8 +81,8 @@ export class UserController {
   @UseGuards(JwtGuard)
   @ApiBearerAuth()
   @Put("CapNhatThongTinNguoiDung")
-  updateUser(@Body() body: AddUserDto, @Req() req: Request) {
-    return this.userService.updateUser(body, req)
+  updateUser(@Body() body: UpdateUserDto) {
+    return this.userService.updateUser(body)
   }
 
 

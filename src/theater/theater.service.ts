@@ -13,11 +13,7 @@ export class TheaterService {
       let { maHeThongRap } = query
       if (maHeThongRap) {
         let dataSearch = await this.prisma.heThongRap.findFirst({
-          where: {
-            ma_he_thong_rap: {
-              contains: query.maHeThongRap
-            }
-          }
+          where: { ma_he_thong_rap: { contains: query.maHeThongRap } }
         })
         return responseData(200, "Handled successfully", dataSearch)
       }

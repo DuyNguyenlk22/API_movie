@@ -9,6 +9,7 @@ import { InfoLogin } from './dto/infoLogin.dto';
 import { ListUserPaginatedDto } from './dto/listUserPaginate.dto';
 import { FindUserDto } from './dto/findUser.dto';
 import { AddUserDto } from './dto/addUser.dto';
+import { UpdateUserDto } from './dto/updateUser.dto';
 
 @Injectable()
 export class UserService {
@@ -22,10 +23,10 @@ export class UserService {
             let { tai_khoan, email, mat_khau, ho_ten, so_dt } = body
 
             let checkUser = await this.prisma.nguoiDung.findFirst({ where: { tai_khoan, } })
-            if (checkUser) return responseData(403, "Account already exists", "")
+            if (checkUser) throw new HttpException("Account already exists", HttpStatus.BAD_REQUEST)
 
             let checkEmail = await this.prisma.nguoiDung.findFirst({ where: { email, } })
-            if (checkEmail) return responseData(404, "Email already exists", "")
+            if (checkEmail) throw new HttpException("Email already exists", HttpStatus.BAD_REQUEST)
 
             let dataUser = {
                 tai_khoan,
@@ -40,7 +41,8 @@ export class UserService {
             delete results.mat_khau;
             return responseData(201, "Successfully", results)
         } catch (exception) {
-            throw new HttpException("Error...", HttpStatus.INTERNAL_SERVER_ERROR)
+            let { status, response, options } = exception
+            return responseData(status, response, options)
         }
     }
 
@@ -52,18 +54,23 @@ export class UserService {
                 if (bcrypt.compareSync(mat_khau, checkUser.mat_khau)) {
                     let token = this.jwtService.signAsync(
                         { data: { tai_khoan: checkUser.tai_khoan, loai_nguoi_dung: checkUser.loai_nguoi_dung } },
-                        { expiresIn: "5d", secret: this.configService.get("SECRET_KEY") }
+                        { expiresIn: "10d", secret: this.configService.get("SECRET_KEY") }
                     )
                     delete checkUser.mat_khau
                     return responseData(200, "Successfully", { ...checkUser, accessToken: await token })
                 } else {
-                    return responseData(404, "Password incorrect", "")
+                    // return responseData(404, "Password incorrect", "")
+                    throw new HttpException("Password incorrect", HttpStatus.BAD_REQUEST)
                 }
             } else {
-                return responseData(404, "Account incorrect", "")
+                // return responseData(404, "Account incorrect", "")
+                throw new HttpException("Account incorrect", HttpStatus.BAD_REQUEST)
+
             }
         } catch (exception) {
-            throw new HttpException("Error...", HttpStatus.INTERNAL_SERVER_ERROR)
+            // throw new HttpException("Error...", HttpStatus.INTERNAL_SERVER_ERROR)
+            let { status, response, options } = exception
+            return responseData(status, response, options)
         }
 
     }
@@ -155,10 +162,13 @@ export class UserService {
     async addNewUser(body: AddUserDto) {
         try {
             let { email, tai_khoan, mat_khau, ho_ten, so_dt, loai_nguoi_dung } = body
+
             let checkUser = await this.prisma.nguoiDung.findFirst({ where: { tai_khoan } })
-            if (checkUser) return responseData(404, "Account already exist", "")
+            if (checkUser) throw new HttpException("Account already exist", HttpStatus.BAD_REQUEST)
+
             let checkEmail = await this.prisma.nguoiDung.findFirst({ where: { email } })
-            if (checkEmail) return responseData(404, "Email already exist", "")
+            if (checkEmail) throw new HttpException("Email already exist", HttpStatus.BAD_REQUEST)
+
             let dataUser = {
                 email,
                 tai_khoan,
@@ -171,7 +181,8 @@ export class UserService {
             delete newUser.mat_khau
             return responseData(201, "Handled successfully", newUser)
         } catch (exception) {
-            console.log("😐 ~ UserService ~ addNewUser ~ exception:👉", exception)
+            let { status, response, options } = exception
+            return responseData(status, response, options)
         }
     }
 
@@ -183,11 +194,7 @@ export class UserService {
 
             if (loai_nguoi_dung !== "admin") throw new HttpException("Forbidden", HttpStatus.FORBIDDEN)
 
-            let result = await this.prisma.nguoiDung.delete({
-                where: {
-                    tai_khoan: query.taiKhoan
-                }
-            })
+            let result = await this.prisma.nguoiDung.delete({ where: { tai_khoan: query.taiKhoan } })
             delete result.mat_khau
             return responseData(200, "Handled successfully", result)
         } catch (exception) {
@@ -236,19 +243,16 @@ export class UserService {
             }
             return responseData(200, "Handled successfully", result)
         } catch (exception) {
-            console.log("😐 ~ UserService ~ getUserById ~ exception:👉", exception)
+            let { status, response, options } = exception
+            return responseData(status, response, options)
         }
     }
 
-    async updateUser(body: AddUserDto, req: any) {
+    async updateUser(body: UpdateUserDto) {
         try {
             let { tai_khoan, email, ho_ten, so_dt, loai_nguoi_dung } = body
-            let token = req.headers.authorization.slice(7)
-            let accessToken = this.jwtService.decode(token).data
-
-            if (tai_khoan !== accessToken.tai_khoan) throw new HttpException("Tài khoản không thể thay đổi", HttpStatus.BAD_REQUEST)
-
             let newData = {
+                tai_khoan,
                 ho_ten,
                 email,
                 so_dt,
@@ -256,9 +260,9 @@ export class UserService {
             }
             let result = await this.prisma.nguoiDung.update({
                 data: newData,
-                where: { tai_khoan: accessToken.tai_khoan }
+                where: { tai_khoan }
             })
-            return responseData(200, "Cập nhật thành công", result)
+            return responseData(200, "Updated successfully", result)
         } catch (exception) {
             return responseData(exception.status, exception.response, "")
         }

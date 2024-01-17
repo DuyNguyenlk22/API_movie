@@ -55,23 +55,24 @@ export class MovieManagementService {
       let pageSize = Number(query1.soPhanTuTrenTrang);
       let index = (page - 1) * pageSize;
       let fromDay = new Date(query1.tuNgay).toISOString()
+      console.log("😐 ~ MovieManagementService ~ getListMovieByDate ~ toDay:👉", query1.denNgay)
       let toDay = new Date(query1.denNgay).toISOString()
 
       let dataByDay = await this.prisma.phim.findMany({
         where: {
-          ngay_khoi_chieu: {
+          ngay_khoi_chieu:
+          {
             gte: fromDay,
-            lte: toDay,
-          },
+            lte: toDay
+          }
         },
         skip: index,
         take: pageSize,
       });
-
       return responseData(200, "Successfully", dataByDay)
 
     } catch (error) {
-      throw new ForbiddenException(error.response)
+      console.log("😐 ~ MovieManagementService ~ getListMovieByDate ~ error:👉", error)
     }
   }
 
@@ -135,6 +136,7 @@ export class MovieManagementService {
     try {
       let { ma_phim, ten_phim, trailer, mo_ta, ngay_khoi_chieu, danh_gia, hot, dang_chieu, sap_chieu } = body
       let detailMovie = await this.getMovieById(ma_phim.toString())
+      if (detailMovie.content === null) throw new HttpException("ma_phim Invalid", HttpStatus.NOT_FOUND)
 
       let updateInfo = {
         ten_phim,
@@ -149,16 +151,14 @@ export class MovieManagementService {
       }
 
       let newData = await this.prisma.phim.update({
-        where: {
-          ma_phim: Number(ma_phim),
-        },
+        where: { ma_phim: Number(ma_phim), },
         data: updateInfo
       })
 
       return responseData(200, "Updated successfully", newData)
 
     } catch (exception) {
-      throw new HttpException("Error...", HttpStatus.INTERNAL_SERVER_ERROR)
+      return responseData(exception.status, exception.response, exception.options)
     }
   }
 }

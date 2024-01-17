@@ -1,4 +1,4 @@
-import { IsNotEmpty } from "class-validator";
+import { IsDateString, IsNotEmpty } from "class-validator";
 import { ApiProperty } from '@nestjs/swagger';
 import { GetListMoviePaginate } from "./getListMoviePaginate.dto";
 

@@ -100,6 +100,14 @@ export class BookingService {
 
       let { ma_phim, ngay_gio_chieu, ma_rap, gia_ve } = body
 
+      let checkPhim = await this.prisma.phim.findUnique({ where: { ma_phim } })
+      if (checkPhim === null) throw new HttpException("ma_phim invalid", HttpStatus.NOT_FOUND)
+
+      let checkRap = await this.prisma.rapPhim.findUnique({ where: { ma_rap } })
+      if (checkRap === null) throw new HttpException("ma_rap invalid", HttpStatus.NOT_FOUND)
+
+      if (gia_ve <= 0) throw new HttpException("gia_ve must be a positive number", HttpStatus.BAD_REQUEST)
+
       let newShowtimes = {
         ma_phim,
         ngay_gio_chieu: new Date(ngay_gio_chieu),
@@ -110,7 +118,7 @@ export class BookingService {
       await this.prisma.lichChieu.create({ data: newShowtimes })
       return responseData(201, "Handled successfully", newShowtimes)
     } catch (exception) {
-      console.log("😐 ~ BookingService ~ addShowtimes ~ exception:👉", exception)
+      return responseData(exception.status, exception.response, exception.options)
     }
   }
 }

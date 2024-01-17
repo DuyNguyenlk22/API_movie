@@ -47,13 +47,12 @@ export class MovieManagementController {
   @ApiBody({
     type: UploadDTO
   })
-
   @Post("ThemPhimUploadHinh")
   @UseInterceptors(addImg())
   addMovie(@Body() formData: UploadDTO, @UploadedFile(
     new ParseFilePipeBuilder()
       .addMaxSizeValidator({
-        maxSize: 500000
+        maxSize: 800000
       }).build({
         exceptionFactory(error) {
           throw new ForbiddenException(error)
