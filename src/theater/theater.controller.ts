@@ -1,6 +1,6 @@
 import { Controller, Get, Query, UseGuards } from '@nestjs/common';
-import { TheaterService } from './theater.service';
 import { ApiBearerAuth, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { TheaterService } from './theater.service';
 import { JwtGuard } from 'src/guard/jwt.guard';
 
 @ApiTags("QuanLyRap")

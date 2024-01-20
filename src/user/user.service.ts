@@ -59,16 +59,13 @@ export class UserService {
                     delete checkUser.mat_khau
                     return responseData(200, "Successfully", { ...checkUser, accessToken: await token })
                 } else {
-                    // return responseData(404, "Password incorrect", "")
                     throw new HttpException("Password incorrect", HttpStatus.BAD_REQUEST)
                 }
             } else {
-                // return responseData(404, "Account incorrect", "")
                 throw new HttpException("Account incorrect", HttpStatus.BAD_REQUEST)
 
             }
         } catch (exception) {
-            // throw new HttpException("Error...", HttpStatus.INTERNAL_SERVER_ERROR)
             let { status, response, options } = exception
             return responseData(status, response, options)
         }
@@ -78,9 +75,7 @@ export class UserService {
     async getListUser() {
         try {
             let listUser = await this.prisma.nguoiDung.findMany()
-            listUser.map((item) => {
-                return delete item.mat_khau
-            })
+            listUser.map((item) => { delete item.mat_khau })
             return responseData(200, "Handled successfully", listUser)
         } catch (exception) {
             throw new HttpException("Error...", HttpStatus.INTERNAL_SERVER_ERROR)
@@ -188,17 +183,26 @@ export class UserService {
 
     async deleteUser(query: { taiKhoan: string }, req: any) {
         try {
+            const { taiKhoan } = query
             let token = req.headers.authorization.slice(7)
             let accessToken = this.jwtService.decode(token)
             let { loai_nguoi_dung } = accessToken.data
 
             if (loai_nguoi_dung !== "admin") throw new HttpException("Forbidden", HttpStatus.FORBIDDEN)
 
-            let result = await this.prisma.nguoiDung.delete({ where: { tai_khoan: query.taiKhoan } })
+            let checkUser = await this.prisma.nguoiDung.findFirst({ where: { tai_khoan: taiKhoan } })
+            if (!checkUser) throw new HttpException("taiKhoan Invalid", HttpStatus.NOT_FOUND)
+
+            let checkBooked = await this.prisma.datVe.findMany({ where: { tai_khoan: taiKhoan } })
+            if (checkBooked) throw new HttpException("taiKhoan has booked , can't delete", HttpStatus.BAD_REQUEST)
+
+            let result = await this.prisma.nguoiDung.delete({ where: { tai_khoan: taiKhoan } })
+
             delete result.mat_khau
             return responseData(200, "Handled successfully", result)
         } catch (exception) {
-            throw new HttpException("This user has booked cannot be deleted", HttpStatus.INTERNAL_SERVER_ERROR)
+            let { status, response, options } = exception
+            return responseData(status, response, options)
         }
     }
 
@@ -264,7 +268,8 @@ export class UserService {
             })
             return responseData(200, "Updated successfully", result)
         } catch (exception) {
-            return responseData(exception.status, exception.response, "")
+            let { status, response, options } = exception
+            return responseData(status, response, options)
         }
     }
 

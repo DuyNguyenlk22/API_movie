@@ -30,23 +30,10 @@ export class TheaterService {
     try {
       let { maHeThongRap } = query
       let data = await this.prisma.cumRap.findMany({
-        where: {
-          ma_he_thong_rap: {
-            contains: maHeThongRap
-          }
-        },
-        include: {
-          RapPhim: {
-            select: {
-              ma_rap: true,
-              ten_rap: true
-            }
-          }
-        }
+        where: { ma_he_thong_rap: { contains: maHeThongRap } },
+        include: { RapPhim: { select: { ma_rap: true, ten_rap: true } } }
       })
-      data.map((item) => {
-        delete item.ma_he_thong_rap
-      })
+      data.map((item) => { delete item.ma_he_thong_rap })
       return responseData(200, "Handled successfully", data)
     } catch (exception) {
       throw new HttpException("Error...", HttpStatus.INTERNAL_SERVER_ERROR)
@@ -62,9 +49,7 @@ export class TheaterService {
               ma_cum_rap: true,
               ten_cum_rap: true,
               dia_chi: true,
-              RapPhim: {
-                include: { Phim: true }
-              }
+              RapPhim: { include: { Phim: true } }
             }
           }
         }
@@ -94,7 +79,8 @@ export class TheaterService {
       })
       return responseData(200, "Handled successfully", results)
     } catch (exception) {
-      console.log("😐 ~ TheaterService ~ layThongTinLichChieuHeThongRap ~ exception:👉", exception)
+      let { status, response, options } = exception
+      return responseData(status, response, options)
     }
   }
 
@@ -118,9 +104,7 @@ export class TheaterService {
                       ngay_gio_chieu: true,
                       gia_ve: true
                     },
-                    where: {
-                      ma_phim: Number(maPhim)
-                    }
+                    where: { ma_phim: Number(maPhim) }
                   }
                 }
               }
@@ -128,11 +112,10 @@ export class TheaterService {
           }
         }
       })
-
       return responseData(200, "Handled successfully", { ...infoMovie.content, heThongRapChieu: cumRapChieu })
-
     } catch (exception) {
-      console.log("😐 ~ TheaterService ~ layThongTinLichChieuHeThongRap ~ exception:👉", exception)
+      let { status, response, options } = exception
+      return responseData(status, response, options)
     }
   }
 

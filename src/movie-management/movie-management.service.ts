@@ -60,11 +60,7 @@ export class MovieManagementService {
 
       let dataByDay = await this.prisma.phim.findMany({
         where: {
-          ngay_khoi_chieu:
-          {
-            gte: fromDay,
-            lte: toDay
-          }
+          ngay_khoi_chieu: { gte: fromDay, lte: toDay }
         },
         skip: index,
         take: pageSize,
@@ -78,11 +74,7 @@ export class MovieManagementService {
 
   async getMovieById(maPhim: string) {
     try {
-      let data = await this.prisma.phim.findUnique({
-        where: {
-          ma_phim: Number(maPhim)
-        }
-      })
+      let data = await this.prisma.phim.findUnique({ where: { ma_phim: Number(maPhim) } })
       return responseData(200, "Successfully", data)
     } catch (error) {
       throw new ForbiddenException(error.response)
@@ -117,15 +109,10 @@ export class MovieManagementService {
   async deleteMovie(maPhim: string) {
     try {
       await this.prisma.$transaction([
-        this.prisma.phim.delete({
-          where: { ma_phim: Number(maPhim) }
-        }),
-        this.prisma.lichChieu.deleteMany({
-          where: { ma_phim: Number(maPhim) }
-        })
+        this.prisma.phim.delete({ where: { ma_phim: Number(maPhim) } }),
+        this.prisma.lichChieu.deleteMany({ where: { ma_phim: Number(maPhim) } })
       ])
       return responseData(200, "Handled successfully", "Deleted successfully")
-
     } catch (exception) {
       throw new HttpException("Error...", HttpStatus.INTERNAL_SERVER_ERROR)
     }
