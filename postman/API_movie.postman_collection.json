@@ -1,0 +1,975 @@
+{
+	"info": {
+		"_postman_id": "c6bae5a8-9efa-429b-b08e-c18f0c0838ac",
+		"name": "API_movie",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "29097390"
+	},
+	"item": [
+		{
+			"name": "QuanLyPhim",
+			"item": [
+				{
+					"name": "LayDanhSachBanner",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7InRhaV9raG9hbiI6InRlc3Q2IiwibG9haV9uZ3VvaV9kdW5nIjoiYWRtaW4ifSwiaWF0IjoxNzA1NDc5MjgzLCJleHAiOjE3MDU5MTEyODN9.Rjd9fBOQWYxVfKiJsMBv51__PobuuhZ9TwicBRowa78",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{domain}}/api/QuanLyPhim/LayDanhSachBanner",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"api",
+								"QuanLyPhim",
+								"LayDanhSachBanner"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "LayDanhSachPhim",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7InRhaV9raG9hbiI6InRlc3Q2IiwibG9haV9uZ3VvaV9kdW5nIjoiYWRtaW4ifSwiaWF0IjoxNzA1NDc5MjgzLCJleHAiOjE3MDU5MTEyODN9.Rjd9fBOQWYxVfKiJsMBv51__PobuuhZ9TwicBRowa78",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{domain}}/api/QuanLyPhim/LayDanhSachPhim",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"api",
+								"QuanLyPhim",
+								"LayDanhSachPhim"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "LayDanhSachPhimPhanTrang",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7InRhaV9raG9hbiI6InRlc3Q2IiwibG9haV9uZ3VvaV9kdW5nIjoiYWRtaW4ifSwiaWF0IjoxNzA1NDc5MjgzLCJleHAiOjE3MDU5MTEyODN9.Rjd9fBOQWYxVfKiJsMBv51__PobuuhZ9TwicBRowa78",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{domain}}/api/QuanLyPhim/LayDanhSachPhimPhanTrang?soTrang=2&soPhanTuTrenTrang=3",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"api",
+								"QuanLyPhim",
+								"LayDanhSachPhimPhanTrang"
+							],
+							"query": [
+								{
+									"key": "soTrang",
+									"value": "2"
+								},
+								{
+									"key": "soPhanTuTrenTrang",
+									"value": "3"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "LayDanhSachPhimTheoNgay",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7InRhaV9raG9hbiI6InRlc3Q2IiwibG9haV9uZ3VvaV9kdW5nIjoiYWRtaW4ifSwiaWF0IjoxNzA1NDc5MjgzLCJleHAiOjE3MDU5MTEyODN9.Rjd9fBOQWYxVfKiJsMBv51__PobuuhZ9TwicBRowa78",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{domain}}/api/QuanLyPhim/LayDanhSachPhimTheoNgay?soTrang=1&soPhanTuTrenTrang=7&tuNgay=01/01/2023&denNgay=12/14/2024",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"api",
+								"QuanLyPhim",
+								"LayDanhSachPhimTheoNgay"
+							],
+							"query": [
+								{
+									"key": "soTrang",
+									"value": "1"
+								},
+								{
+									"key": "soPhanTuTrenTrang",
+									"value": "7"
+								},
+								{
+									"key": "tuNgay",
+									"value": "01/01/2023"
+								},
+								{
+									"key": "denNgay",
+									"value": "12/14/2024"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "LayThongTinPhim",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7InRhaV9raG9hbiI6InRlc3Q2IiwibG9haV9uZ3VvaV9kdW5nIjoiYWRtaW4ifSwiaWF0IjoxNzA1NDc5MjgzLCJleHAiOjE3MDU5MTEyODN9.Rjd9fBOQWYxVfKiJsMBv51__PobuuhZ9TwicBRowa78",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{domain}}/api/QuanLyPhim/LayThongTinPhim?maPhim=2",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"api",
+								"QuanLyPhim",
+								"LayThongTinPhim"
+							],
+							"query": [
+								{
+									"key": "maPhim",
+									"value": "2"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ThemPhimUploadHinh",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7InRhaV9raG9hbiI6InRlc3Q2IiwibG9haV9uZ3VvaV9kdW5nIjoiYWRtaW4ifSwiaWF0IjoxNzA1NDc5MjgzLCJleHAiOjE3MDU5MTEyODN9.Rjd9fBOQWYxVfKiJsMBv51__PobuuhZ9TwicBRowa78",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "maPhim",
+									"value": "1",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "ten_phim",
+									"value": "test9",
+									"type": "text"
+								},
+								{
+									"key": "hinh_anh",
+									"type": "file",
+									"src": "/C:/Users/nguye/OneDrive/Desktop/images/logoD.png"
+								},
+								{
+									"key": "trailer",
+									"value": "youtube.com",
+									"type": "text"
+								},
+								{
+									"key": "mo_ta",
+									"value": "ai biet gi dau",
+									"type": "text"
+								},
+								{
+									"key": "ngay_khoi_chieu",
+									"value": "01/17/2024",
+									"type": "text"
+								},
+								{
+									"key": "danh_gia",
+									"value": "3",
+									"type": "text"
+								},
+								{
+									"key": "hot",
+									"value": "false",
+									"type": "text"
+								},
+								{
+									"key": "dang_chieu",
+									"value": "false",
+									"type": "text"
+								},
+								{
+									"key": "sap_chieu",
+									"value": "true",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{domain}}/api/QuanLyPhim/ThemPhimUploadHinh",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"api",
+								"QuanLyPhim",
+								"ThemPhimUploadHinh"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "XoaPhim",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7InRhaV9raG9hbiI6InRlc3QzIn0sImlhdCI6MTcwNDUyMDAxNSwiZXhwIjoxNzA0NTIxMjE1fQ.7GECLjjsF8xUD3krBWIDz7LAv73LdzIf3zfeWiVaUwU",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{domain}}/api/QuanLyPhim/XoaPhim?maPhim=24",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"api",
+								"QuanLyPhim",
+								"XoaPhim"
+							],
+							"query": [
+								{
+									"key": "maPhim",
+									"value": "24"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CapNhatPhimUpload",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7InRhaV9raG9hbiI6InRlc3Q2IiwibG9haV9uZ3VvaV9kdW5nIjoiYWRtaW4ifSwiaWF0IjoxNzA1NDc5MjgzLCJleHAiOjE3MDU5MTEyODN9.Rjd9fBOQWYxVfKiJsMBv51__PobuuhZ9TwicBRowa78",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "ma_phim",
+									"value": "40",
+									"type": "text"
+								},
+								{
+									"key": "ten_phim",
+									"value": "The Creator",
+									"type": "text"
+								},
+								{
+									"key": "trailer",
+									"value": "youtube.com/123asd\n",
+									"type": "text"
+								},
+								{
+									"key": "hinh_anh",
+									"type": "file",
+									"src": []
+								},
+								{
+									"key": "mo_ta",
+									"value": "phim hay quá",
+									"type": "text"
+								},
+								{
+									"key": "ngay_khoi_chieu",
+									"value": "01/17/2024",
+									"type": "text"
+								},
+								{
+									"key": "danh_gia",
+									"value": "4",
+									"type": "text"
+								},
+								{
+									"key": "hot",
+									"value": "true",
+									"type": "text"
+								},
+								{
+									"key": "dang_chieu",
+									"value": "false",
+									"type": "text"
+								},
+								{
+									"key": "sap_chieu",
+									"value": "true",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{domain}}/api/QuanLyPhim/CapNhatPhimUpload",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"api",
+								"QuanLyPhim",
+								"CapNhatPhimUpload"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "QuanLyNguoiDung",
+			"item": [
+				{
+					"name": "DangKy",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "tai_khoan",
+									"value": "test8",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "test5@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "mat_khau",
+									"value": "1234",
+									"type": "text"
+								},
+								{
+									"key": "ho_ten",
+									"value": "duy2",
+									"type": "text"
+								},
+								{
+									"key": "so_dt",
+									"value": "0123457676",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{domain}}/api/QuanLyNguoiDung/DangKy",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"api",
+								"QuanLyNguoiDung",
+								"DangKy"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DangNhap",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "tai_khoan",
+									"value": "test6",
+									"type": "text"
+								},
+								{
+									"key": "mat_khau",
+									"value": "1234",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{domain}}/api/QuanLyNguoiDung/DangNhap",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"api",
+								"QuanLyNguoiDung",
+								"DangNhap"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "LayDanhSachNguoiDung",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7InRhaV9raG9hbiI6InRlc3Q2IiwibG9haV9uZ3VvaV9kdW5nIjoiYWRtaW4ifSwiaWF0IjoxNzA1NDc5MjgzLCJleHAiOjE3MDU5MTEyODN9.Rjd9fBOQWYxVfKiJsMBv51__PobuuhZ9TwicBRowa78",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{domain}}/api/QuanLyNguoiDung/LayDanhSachNguoiDung",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"api",
+								"QuanLyNguoiDung",
+								"LayDanhSachNguoiDung"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "LayDanhSachNguoiDungPhanTrang",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{domain}}/api/QuanLyNguoiDung/LayDanhSachNguoiDungPhanTrang?soTrang=1&soPhanTuTrenTrang=3",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"api",
+								"QuanLyNguoiDung",
+								"LayDanhSachNguoiDungPhanTrang"
+							],
+							"query": [
+								{
+									"key": "soTrang",
+									"value": "1"
+								},
+								{
+									"key": "soPhanTuTrenTrang",
+									"value": "3"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "TimKiemNguoiDung",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7InRhaV9raG9hbiI6InRlc3Q2IiwibG9haV9uZ3VvaV9kdW5nIjoiYWRtaW4ifSwiaWF0IjoxNzA1NDc5MjgzLCJleHAiOjE3MDU5MTEyODN9.Rjd9fBOQWYxVfKiJsMBv51__PobuuhZ9TwicBRowa78",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{domain}}/api/QuanLyNguoiDung/TimKiemNguoiDung?tuKhoa=test1",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"api",
+								"QuanLyNguoiDung",
+								"TimKiemNguoiDung"
+							],
+							"query": [
+								{
+									"key": "tuKhoa",
+									"value": "test1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "TimKiemNguoiDungPhanTrang",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{domain}}/api/QuanLyNguoiDung/TimKiemNguoiDungPhanTrang?soTrang=1&soPhanTuTrenTrang=2&tuKhoa=duy",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"api",
+								"QuanLyNguoiDung",
+								"TimKiemNguoiDungPhanTrang"
+							],
+							"query": [
+								{
+									"key": "soTrang",
+									"value": "1"
+								},
+								{
+									"key": "soPhanTuTrenTrang",
+									"value": "2"
+								},
+								{
+									"key": "tuKhoa",
+									"value": "duy"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ThemNguoiDung",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7InRhaV9raG9hbiI6InRlc3QzIn0sImlhdCI6MTcwNDcwMTc1NCwiZXhwIjoxNzA0NzAyOTU0fQ.yKO33rt8SYPLtSRxn2RiViomN38fGj6itfeVDcJ5FMM",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "email",
+									"value": "test@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "tai_khoan",
+									"value": "test6",
+									"type": "text"
+								},
+								{
+									"key": "ho_ten",
+									"value": "123",
+									"type": "text"
+								},
+								{
+									"key": "mat_khau",
+									"value": "1234",
+									"type": "text"
+								},
+								{
+									"key": "so_dt",
+									"value": "01234567",
+									"type": "text"
+								},
+								{
+									"key": "loai_nguoi_dung",
+									"value": "admin",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{domain}}/api/QuanLyNguoiDung/ThemNguoiDung",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"api",
+								"QuanLyNguoiDung",
+								"ThemNguoiDung"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "XoaNguoiDung",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7InRhaV9raG9hbiI6InRlc3Q2IiwibG9haV9uZ3VvaV9kdW5nIjoiYWRtaW4ifSwiaWF0IjoxNzA1NDc5MjgzLCJleHAiOjE3MDU5MTEyODN9.Rjd9fBOQWYxVfKiJsMBv51__PobuuhZ9TwicBRowa78",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{domain}}/api/QuanLyNguoiDung/XoaNguoiDung?taiKhoan=test1",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"api",
+								"QuanLyNguoiDung",
+								"XoaNguoiDung"
+							],
+							"query": [
+								{
+									"key": "taiKhoan",
+									"value": "test1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CapNhatThongTinNguoiDung",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7InRhaV9raG9hbiI6InRlc3Q2IiwibG9haV9uZ3VvaV9kdW5nIjoiYWRtaW4ifSwiaWF0IjoxNzA1NDc5MjgzLCJleHAiOjE3MDU5MTEyODN9.Rjd9fBOQWYxVfKiJsMBv51__PobuuhZ9TwicBRowa78",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"tai_khoan\": \"test6\",\r\n    \"email\": \"test@gmail.com\",\r\n    \"ho_ten\": \"Duy Nguyen\",\r\n    \"so_dt\": \"012345678910\",\r\n    \"loai_nguoi_dung\": \"admin\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}/api/QuanLyNguoiDung/CapNhatThongTinNguoiDung",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"api",
+								"QuanLyNguoiDung",
+								"CapNhatThongTinNguoiDung"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ThongTinTaiKhoan",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7InRhaV9raG9hbiI6InRlc3Q2IiwibG9haV9uZ3VvaV9kdW5nIjoiYWRtaW4ifSwiaWF0IjoxNzA1MDQzODg5LCJleHAiOjE3MDUzMDMwODl9.80xO2isl2efHUuHKVk6IPRvQmFyIoGXdXjrqNwXH4yI",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{domain}}/api/QuanLyNguoiDung/ThongTinTaiKhoan",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"api",
+								"QuanLyNguoiDung",
+								"ThongTinTaiKhoan"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "QuanLyRap",
+			"item": [
+				{
+					"name": "LayThongTinHeThongRap",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7InRhaV9raG9hbiI6InRlc3Q2IiwibG9haV9uZ3VvaV9kdW5nIjoiYWRtaW4ifSwiaWF0IjoxNzA1NDc5MjgzLCJleHAiOjE3MDU5MTEyODN9.Rjd9fBOQWYxVfKiJsMBv51__PobuuhZ9TwicBRowa78",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{domain}}/api/QuanLyRap/LayThongTinHeThongRap",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"api",
+								"QuanLyRap",
+								"LayThongTinHeThongRap"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "LayThongTinCumRapTheoHeThong",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7InRhaV9raG9hbiI6InRlc3Q2IiwibG9haV9uZ3VvaV9kdW5nIjoiYWRtaW4ifSwiaWF0IjoxNzA1NDc5MjgzLCJleHAiOjE3MDU5MTEyODN9.Rjd9fBOQWYxVfKiJsMBv51__PobuuhZ9TwicBRowa78",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{domain}}/api/QuanLyRap/LayThongTinCumRapTheoHeThong?maHeThongRap=bhd",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"api",
+								"QuanLyRap",
+								"LayThongTinCumRapTheoHeThong"
+							],
+							"query": [
+								{
+									"key": "maHeThongRap",
+									"value": "bhd"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "LayThongTinLichChieuHeThongRap",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7InRhaV9raG9hbiI6InRlc3Q2IiwibG9haV9uZ3VvaV9kdW5nIjoiYWRtaW4ifSwiaWF0IjoxNzA1NDc5MjgzLCJleHAiOjE3MDU5MTEyODN9.Rjd9fBOQWYxVfKiJsMBv51__PobuuhZ9TwicBRowa78",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{domain}}/api/QuanLyRap/LayThongTinLichChieuHeThongRap",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"api",
+								"QuanLyRap",
+								"LayThongTinLichChieuHeThongRap"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "LayThongTinLichChieuPhim",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7InRhaV9raG9hbiI6InRlc3Q2IiwibG9haV9uZ3VvaV9kdW5nIjoiYWRtaW4ifSwiaWF0IjoxNzA1NDc5MjgzLCJleHAiOjE3MDU5MTEyODN9.Rjd9fBOQWYxVfKiJsMBv51__PobuuhZ9TwicBRowa78",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{domain}}/api/QuanLyRap/LayThongTinLichChieuPhim?maPhim=1",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"api",
+								"QuanLyRap",
+								"LayThongTinLichChieuPhim"
+							],
+							"query": [
+								{
+									"key": "maPhim",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "QuanLyDatVe",
+			"item": [
+				{
+					"name": "LayDanhSachPhongVe",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7InRhaV9raG9hbiI6InRlc3Q2IiwibG9haV9uZ3VvaV9kdW5nIjoiYWRtaW4ifSwiaWF0IjoxNzA1Mzg5ODQxLCJleHAiOjE3MDU4MjE4NDF9.5S8KdssLiwSkA3D6dzIF4zIjBfPmNijFetk8GJ6f5zQ",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{domain}}/api/QuanLyDatVe/LayDanhSachPhongVe?maLichChieu=4",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"api",
+								"QuanLyDatVe",
+								"LayDanhSachPhongVe"
+							],
+							"query": [
+								{
+									"key": "maLichChieu",
+									"value": "4"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DatVe",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7InRhaV9raG9hbiI6InRlc3Q2IiwibG9haV9uZ3VvaV9kdW5nIjoiYWRtaW4ifSwiaWF0IjoxNzA1Mzg5ODQxLCJleHAiOjE3MDU4MjE4NDF9.5S8KdssLiwSkA3D6dzIF4zIjBfPmNijFetk8GJ6f5zQ",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"ma_lich_chieu\": 4,\r\n  \"danh_sach_ve\": [\r\n    {\r\n      \"ma_ghe\": 15,\r\n      \"gia_ve\": 70000\r\n    },\r\n     {\r\n      \"ma_ghe\": 12,\r\n      \"gia_ve\": 70000\r\n    },\r\n     {\r\n      \"ma_ghe\": 13,\r\n      \"gia_ve\": 70000\r\n    }\r\n  ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}/api/QuanLyDatVe/DatVe",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"api",
+								"QuanLyDatVe",
+								"DatVe"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "TaoLichChieu",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7InRhaV9raG9hbiI6InRlc3Q2IiwibG9haV9uZ3VvaV9kdW5nIjoiYWRtaW4ifSwiaWF0IjoxNzA1NDYyMjkyLCJleHAiOjE3MDU4OTQyOTJ9.UfDcXflEczHmAzztu6A6syVmgx11-cdgGz8jj3beVCw",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"ma_phim\": 1,\r\n  \"ngay_gio_chieu\": \"10/01/2024\",\r\n  \"ma_rap\": 1,\r\n  \"gia_ve\": 70000\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}/api/QuanLyDatVe/TaoLichChieu",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"api",
+								"QuanLyDatVe",
+								"TaoLichChieu"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"value": "",
+			"type": "string",
+			"disabled": true
+		},
+		{
+			"key": "domain",
+			"value": "http://localhost:8080"
+		}
+	]
+}
