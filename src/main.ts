@@ -10,9 +10,14 @@ async function bootstrap() {
   app.use(express.static("."))
   app.useGlobalPipes(new ValidationPipe())
 
-  const config = new DocumentBuilder().setTitle("API_Movie").addBearerAuth().setDescription('').setVersion('v1').build();
+  const config = new DocumentBuilder()
+    .addBearerAuth()
+    .setTitle("API_Movie")
+    .setDescription(`Dự án cuối khoá CyberSoft Academy`)
+    .setVersion('1.0')
+    .build();
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup("/swagger", app, document);
+  SwaggerModule.setup("/api", app, document);
 
   await app.listen(8080);
 }

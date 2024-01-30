@@ -7,7 +7,13 @@ import { TheaterModule } from './theater/theater.module';
 import { BookingModule } from './booking/booking.module';
 
 @Module({
-  imports: [BookingModule, UserModule, ConfigModule.forRoot({ isGlobal: true }), MovieManagementModule, TheaterModule],
+  imports: [
+    BookingModule,
+    UserModule,
+    ConfigModule.forRoot({ isGlobal: true }),
+    MovieManagementModule,
+    TheaterModule
+  ],
   providers: [JwtStrategy]
 })
 export class AppModule { }
