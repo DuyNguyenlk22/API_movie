@@ -55,7 +55,6 @@ export class MovieManagementService {
       let pageSize = Number(query1.soPhanTuTrenTrang);
       let index = (page - 1) * pageSize;
       let fromDay = new Date(query1.tuNgay).toISOString()
-      console.log("😐 ~ MovieManagementService ~ getListMovieByDate ~ toDay:👉", query1.denNgay)
       let toDay = new Date(query1.denNgay).toISOString()
 
       let dataByDay = await this.prisma.phim.findMany({
@@ -68,7 +67,7 @@ export class MovieManagementService {
       return responseData(200, "Successfully", dataByDay)
 
     } catch (error) {
-      console.log("😐 ~ MovieManagementService ~ getListMovieByDate ~ error:👉", error)
+      throw new Error(error.response)
     }
   }
 
