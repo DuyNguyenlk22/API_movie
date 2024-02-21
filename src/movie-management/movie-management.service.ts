@@ -18,7 +18,7 @@ export class MovieManagementService {
       let listBanner = await this.prisma.banner.findMany()
       return responseData(200, "Successfully", listBanner)
     } catch (error) {
-      throw new ForbiddenException(error.response)
+      throw new Error(error.response)
     }
   }
 
@@ -27,7 +27,7 @@ export class MovieManagementService {
       let listMovie = await this.prisma.phim.findMany();
       return responseData(200, "Successfully", listMovie)
     } catch (error) {
-      throw new ForbiddenException(error.response)
+      throw new Error(error.response)
     }
   }
 
@@ -45,7 +45,7 @@ export class MovieManagementService {
 
       return responseData(200, "Successfully", { data, totalPage })
     } catch (error) {
-      throw new ForbiddenException(error.response)
+      throw new Error(error.response)
     }
   }
 
@@ -77,7 +77,7 @@ export class MovieManagementService {
       let data = await this.prisma.phim.findUnique({ where: { ma_phim: Number(maPhim) } })
       return responseData(200, "Successfully", data)
     } catch (error) {
-      throw new ForbiddenException(error.response)
+      throw new Error(error.response)
     }
   }
 
