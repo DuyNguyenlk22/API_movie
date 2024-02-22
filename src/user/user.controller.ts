@@ -1,14 +1,14 @@
 import { Controller, Get, Post, Body, Delete, HttpCode, HttpStatus, Query, Req, UseGuards, Put } from '@nestjs/common';
-import { UserService } from './user.service';
-import { InfoUser } from './dto/infoUser.dto';
 import { ApiBearerAuth, ApiQuery, ApiTags } from '@nestjs/swagger';
-import { InfoLogin } from './dto/infoLogin.dto';
 import { ListUserPaginatedDto } from './dto/listUserPaginate.dto';
-import { FindUserDto } from './dto/findUser.dto';
-import { AddUserDto } from './dto/addUser.dto';
-import { Request } from 'express';
-import { JwtGuard } from 'src/guard/jwt.guard';
 import { UpdateUserDto } from './dto/updateUser.dto';
+import { FindUserDto } from './dto/findUser.dto';
+import { InfoLogin } from './dto/infoLogin.dto';
+import { JwtGuard } from 'src/guard/jwt.guard';
+import { AddUserDto } from './dto/addUser.dto';
+import { InfoUser } from './dto/infoUser.dto';
+import { UserService } from './user.service';
+import { Request } from 'express';
 
 
 @ApiTags("QuanLyNguoiDung")

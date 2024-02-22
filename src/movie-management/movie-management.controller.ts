@@ -1,14 +1,12 @@
-import { Controller, Get, Post, Delete, Query, ValidationPipe, UseInterceptors, UploadedFile, Body, Req, BadRequestException, UseGuards, ParseFilePipe, MaxFileSizeValidator, FileTypeValidator, ParseFilePipeBuilder, HttpStatus, Put, ForbiddenException } from '@nestjs/common';
-import { MovieManagementService } from './movie-management.service';
+import { Controller, Get, Post, Delete, Query, ValidationPipe, UseInterceptors, UploadedFile, Body, UseGuards, ParseFilePipeBuilder, Put, ForbiddenException } from '@nestjs/common';
 import { ApiBearerAuth, ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { GetListMoviePaginate } from './dto/getListMoviePaginate.dto';
+import { MovieManagementService } from './movie-management.service';
 import { GetListMovieByDate } from './dto/getListMovieByDate.dto';
-import { UploadDTO } from './dto/upload.dto';
-import { addImg } from 'src/config/upload';
-import { JwtGuard } from 'src/guard/jwt.guard';
 import { UpdateMovieDto } from './dto/movieUpdate.dto';
-
-
+import { JwtGuard } from 'src/guard/jwt.guard';
+import { UploadDTO } from './dto/upload.dto';
+import { uploadImg } from 'src/config/upload';
 
 @ApiTags("QuanLyPhim")
 @UseGuards(JwtGuard)
@@ -48,7 +46,7 @@ export class MovieManagementController {
     type: UploadDTO
   })
   @Post("ThemPhimUploadHinh")
-  @UseInterceptors(addImg())
+  @UseInterceptors(uploadImg()) //*middleware upload file 
   addMovie(@Body() formData: UploadDTO, @UploadedFile(
     new ParseFilePipeBuilder()
       .addMaxSizeValidator({
@@ -72,7 +70,7 @@ export class MovieManagementController {
     type: UpdateMovieDto
   })
   @Put("CapNhatPhimUpload")
-  @UseInterceptors(addImg())
+  @UseInterceptors(uploadImg())
   updateMovie(@Body() body: UpdateMovieDto,
     @UploadedFile() hinhAnh: Express.Multer.File[]
   ) {

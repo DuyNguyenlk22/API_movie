@@ -1,15 +1,14 @@
 import { ForbiddenException, HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { PrismaClient } from '@prisma/client';
-import { responseData } from 'src/config/response';
 import { GetListMoviePaginate } from './dto/getListMoviePaginate.dto';
 import { GetListMovieByDate } from './dto/getListMovieByDate.dto';
-import { JwtService } from '@nestjs/jwt';
-import { UploadDTO } from './dto/upload.dto';
 import { UpdateMovieDto } from './dto/movieUpdate.dto';
+import { responseData } from 'src/config/response';
+import { PrismaClient } from '@prisma/client';
+import { UploadDTO } from './dto/upload.dto';
 
 @Injectable()
 export class MovieManagementService {
-  constructor(private jwtService: JwtService) { }
+  constructor() { }
 
   prisma = new PrismaClient()
 
@@ -101,7 +100,7 @@ export class MovieManagementService {
       return responseData(201, "Movie added successfully", movie)
 
     } catch (error) {
-      throw new ForbiddenException(error.response)
+      throw new Error(error.response)
     }
   }
 

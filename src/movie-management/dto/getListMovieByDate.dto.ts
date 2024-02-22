@@ -1,6 +1,6 @@
-import { IsDateString, IsNotEmpty } from "class-validator";
-import { ApiProperty } from '@nestjs/swagger';
 import { GetListMoviePaginate } from "./getListMoviePaginate.dto";
+import { ApiProperty } from '@nestjs/swagger';
+import { IsNotEmpty } from "class-validator";
 
 export class GetListMovieByDate extends GetListMoviePaginate {
 

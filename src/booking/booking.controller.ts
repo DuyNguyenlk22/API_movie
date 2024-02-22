@@ -1,10 +1,10 @@
 import { Controller, Get, Post, Body, Query, Req, UseGuards } from '@nestjs/common';
-import { BookingService } from './booking.service';
 import { ApiBearerAuth, ApiQuery, ApiTags } from '@nestjs/swagger';
-import { BookingDto } from './dto/booking.dto';
-import { Request } from 'express';
+import { BookingService } from './booking.service';
 import { ShowtimesDto } from './dto/showtimes.dto';
+import { BookingDto } from './dto/booking.dto';
 import { JwtGuard } from 'src/guard/jwt.guard';
+import { Request } from 'express';
 
 @ApiTags("QuanLyDatVe")
 @UseGuards(JwtGuard)

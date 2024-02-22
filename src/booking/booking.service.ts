@@ -1,4 +1,4 @@
-import { BadRequestException, ForbiddenException, HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
 import { responseData } from 'src/config/response';
 import { JwtService } from '@nestjs/jwt';
@@ -49,7 +49,7 @@ export class BookingService {
   async booking(body: BookingDto, req: any) {
     try {
       let token = req.headers.authorization.slice(7)
-      let accessToken = this.jwtService.decode(token).data
+      let { tai_khoan } = this.jwtService.decode(token).data
       let { ma_lich_chieu, danh_sach_ve } = body
 
       let lichChieu = await this.prisma.lichChieu.findUnique({
@@ -62,7 +62,6 @@ export class BookingService {
           const checkData = await this.prisma.ghe.findUnique({
             where: { ma_ghe: item.ma_ghe }
           })
-          console.log("😐 ~ BookingService ~ danh_sach_ve.map ~ checkData:👉", checkData)
           if (checkData === null) throw new HttpException("ma_ghe invalid", HttpStatus.NOT_FOUND)
           if (checkData.taiKhoanNguoiDat !== "") throw new HttpException("Fail...", HttpStatus.BAD_REQUEST)
 
@@ -70,14 +69,14 @@ export class BookingService {
             where: { ma_ghe: item.ma_ghe },
             data: {
               daDat: true,
-              taiKhoanNguoiDat: accessToken.tai_khoan
+              taiKhoanNguoiDat: tai_khoan
             }
           })
         }))
 
       let newData = danh_sach_ve.map((item) => {
         return {
-          tai_khoan: accessToken.tai_khoan,
+          tai_khoan,
           ma_lich_chieu,
           ma_ghe: item.ma_ghe,
           ngay_dat: new Date().toISOString(),

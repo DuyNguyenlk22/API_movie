@@ -1,5 +1,5 @@
-import { ApiProperty } from "@nestjs/swagger";
 import { IsEmail, IsNotEmpty } from "class-validator";
+import { ApiProperty } from "@nestjs/swagger";
 import { InfoLogin } from "./infoLogin.dto";
 
 export class InfoUser extends InfoLogin {

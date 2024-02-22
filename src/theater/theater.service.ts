@@ -1,7 +1,7 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { PrismaClient } from '@prisma/client';
-import { responseData } from 'src/config/response';
 import { MovieManagementService } from 'src/movie-management/movie-management.service';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { responseData } from 'src/config/response';
+import { PrismaClient } from '@prisma/client';
 
 @Injectable()
 export class TheaterService {

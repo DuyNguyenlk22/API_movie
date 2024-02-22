@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { ForbiddenException, HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InfoUser } from './dto/infoUser.dto';
 import { PrismaClient } from '@prisma/client';
 import { responseData } from 'src/config/response';
@@ -184,11 +184,10 @@ export class UserService {
     async deleteUser(query: { taiKhoan: string }, req: any) {
         try {
             const { taiKhoan } = query
-            let token = req.headers.authorization.slice(7)
-            let accessToken = this.jwtService.decode(token)
-            let { loai_nguoi_dung } = accessToken.data
+            const token = req.headers.authorization.slice(7)
+            let { loai_nguoi_dung } = this.jwtService.decode(token).data
 
-            if (loai_nguoi_dung !== "admin") throw new HttpException("Forbidden", HttpStatus.FORBIDDEN)
+            if (loai_nguoi_dung !== "admin") throw new ForbiddenException("Forbidden")
 
             let checkUser = await this.prisma.nguoiDung.findFirst({ where: { tai_khoan: taiKhoan } })
             if (!checkUser) throw new HttpException("taiKhoan Invalid", HttpStatus.NOT_FOUND)
@@ -209,11 +208,11 @@ export class UserService {
     async getUserById(req: any) {
         try {
             let token = req.headers.authorization.slice(7)
-            let accessToken = this.jwtService.decode(token).data
-            let infoUser = await this.prisma.nguoiDung.findUnique({ where: { tai_khoan: accessToken.tai_khoan } })
+            let { tai_khoan } = this.jwtService.decode(token).data
+            let infoUser = await this.prisma.nguoiDung.findUnique({ where: { tai_khoan: tai_khoan } })
             delete infoUser.mat_khau
             let thongTinPhim = await this.prisma.datVe.findMany({
-                where: { tai_khoan: accessToken.tai_khoan },
+                where: { tai_khoan: tai_khoan },
                 include: { LichChieu: true, Ghe: { include: { RapPhim: { include: { CumRap: { include: { HeThongRap: true } } } } } } }
             })
 
