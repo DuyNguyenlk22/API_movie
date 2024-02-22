@@ -222,15 +222,21 @@ export class UserService {
                         where: { ma_phim: item.LichChieu.ma_phim },
                         select: { ten_phim: true, hinh_anh: true }
                     })
+
+                    let { ma_he_thong_rap, ten_he_thong_rap } = item.Ghe.RapPhim.CumRap.HeThongRap
+                    let { ten_cum_rap, ma_cum_rap } = item.Ghe.RapPhim.CumRap
+                    let { ma_rap, ten_rap } = item.Ghe.RapPhim
+                    let { ma_ghe, ten_ghe } = item.Ghe
+
                     const danhSachGhe = {
-                        ma_he_thong_rap: item.Ghe.RapPhim.CumRap.HeThongRap.ma_he_thong_rap,
-                        ten_he_thong_rap: item.Ghe.RapPhim.CumRap.HeThongRap.ten_he_thong_rap,
-                        ma_cum_rap: item.Ghe.RapPhim.CumRap.ten_cum_rap,
-                        ten_cum_rap: item.Ghe.RapPhim.CumRap.ma_cum_rap,
-                        ma_rap: item.Ghe.RapPhim.ma_rap,
-                        ten_rap: item.Ghe.RapPhim.ten_rap,
-                        ma_ghe: item.Ghe.ma_ghe,
-                        ten_ghe: item.Ghe.ten_ghe
+                        ma_he_thong_rap,
+                        ten_he_thong_rap,
+                        ma_cum_rap,
+                        ten_cum_rap,
+                        ma_rap,
+                        ten_rap,
+                        ma_ghe,
+                        ten_ghe
                     }
                     return {
                         danhSachGhe,
