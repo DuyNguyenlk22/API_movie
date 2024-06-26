@@ -1,4 +1,4 @@
-import { ForbiddenException, HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { GetListMoviePaginate } from './dto/getListMoviePaginate.dto';
 import { GetListMovieByDate } from './dto/getListMovieByDate.dto';
 import { UpdateMovieDto } from './dto/movieUpdate.dto';
